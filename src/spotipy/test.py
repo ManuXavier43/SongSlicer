@@ -30,7 +30,7 @@ try:
             
             # Start playing the tracks
             sp.start_playback(device_id=device_id, uris=track_uris)
-            print("Playing the saved songs...")
+            print("Playing saved songs...")
             
             # Check for more tracks (pagination)
             if results['next']:
