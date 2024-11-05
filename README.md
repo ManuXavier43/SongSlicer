@@ -14,5 +14,11 @@ Song slicer is a python application proposal that allows you to slice songs to s
 
 This project is a Python based audio splitter appilcation that uses pip libraries.
 
+## Dependencies
+
 **Spotipy:** 
 pip install spotipy
+
+## Classes
+
++ song-slicer\src\spotipy\test.py connects to your Spotify account and plays your saved library
