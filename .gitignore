@@ -1,0 +1,4 @@
+.cache
+.env
+src/test_mp3s/thx.mp3
+src/test_mp3s/thx.wav
