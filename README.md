@@ -15,10 +15,20 @@ Song slicer is a python application proposal that allows you to slice songs to s
 This project is a Python based audio splitter appilcation that uses pip libraries.
 
 ## Dependencies
+this project makes use of the conda
+spleeter env makes use of py -v 3.8 for spleeter denpendancies
+run
+"conda activate spleeter-env"
 
 **Spotipy:** 
 pip install spotipy
 Song samples are sourced from Spotify
+
+**Dotenv**
+pip install dotenv
+
+**Spleeter**
+pip install spleeter
 
 **CustomTKinter**
 pip install customtkinter
