@@ -22,10 +22,11 @@ class SpotipyClient:
         except Exception as e:
             print(f"Cannot connect to Spotify API: {e}")
     def loadSampleSong(self):
-        search_result = self.sp.search(q='Led Zeppelin', limit=1)
+        query = input("Enter an artist to search: ")
+        search_result = self.sp.search(q={query}, limit=1)
         #Search an artist and cycle through their previews
-        lz_uri = search_result['tracks']['items'][0]['artists'][0]['uri']
-        tracks = self.sp.artist_top_tracks(lz_uri, country='US')
+        artist_uri = search_result['tracks']['items'][0]['artists'][0]['uri']
+        tracks = self.sp.artist_top_tracks(artist_uri, country='US')
         for track in tracks['tracks'][:5]:
             print('track    : ' + track['name'])
             print('audio    : ' + track['preview_url'])
