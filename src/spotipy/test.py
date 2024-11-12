@@ -1,4 +1,5 @@
 import spotipy, os #os for client secrets
+import requests #Needed for fetching previews of songs
 from dotenv import load_dotenv#Load environment variables
 
 from dotenv import load_dotenv
@@ -20,7 +21,23 @@ class SpotipyClient:
             print("Connected!")
         except Exception as e:
             print(f"Cannot connect to Spotify API: {e}")
-
+    def loadSampleSong(self):
+        search_result = self.sp.search(q='Led Zeppelin', limit=1)
+        #Search an artist and cycle through their previews
+        lz_uri = search_result['tracks']['items'][0]['artists'][0]['uri']
+        tracks = self.sp.artist_top_tracks(lz_uri, country='US')
+        for track in tracks['tracks'][:5]:
+            print('track    : ' + track['name'])
+            print('audio    : ' + track['preview_url'])
+            preview_url = track['preview_url']
+            print('cover art: ' + track['album']['images'][0]['url'])
+            print()
+        try:
+            response = requests.get(preview_url)
+            with open("preview.mp3", "wb") as file:
+                file.write(response.content)
+        except Exception as e:
+            print(f"Connection error fetching preview: {e}")
     def playCurrentTracks(self):
         #Play user's saved tracks
         sp = self.sp
@@ -51,3 +68,4 @@ class SpotipyClient:
 client = SpotipyClient()
 client.connectToSpotipy()
 client.playCurrentTracks()
+client.loadSampleSong()
