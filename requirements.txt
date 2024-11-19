@@ -1,0 +1,6 @@
+spleeter
+spotipy
+python-dotenv
+customtkinter
+flask==2.0.3
+werkzeug==2.0.3

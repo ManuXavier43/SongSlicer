@@ -14,6 +14,20 @@ Song slicer is a python application proposal that allows you to slice songs to s
 
 This project is a Python based audio splitter appilcation that uses pip libraries.
 
+## Run flask app using Docker
+
+```docker build -t song-slicer .  ```
+```docker run -p 5000:5000 song-slicer```
+
+**Flask container URL:** http://127.0.0.1:5000/
+
+## Run python app using Docker
+
+```docker build -t song-slicer .  ```
+```docker run -it song-slicer /bin/bash```
+```python src/[PATH_TO_PYTHON_FILE]```
+
+## OLD!!!!!!!!!!!!!!!
 ## Dependencies
 this project makes use of the conda
 spleeter env makes use of py -v 3.8 for spleeter denpendancies

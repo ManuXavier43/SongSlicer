@@ -68,5 +68,5 @@ class SpotipyClient:
             print(f"Cannot fetch or play user's songs: {e}")
 client = SpotipyClient()
 client.connectToSpotipy()
-client.playCurrentTracks()
+# client.playCurrentTracks()
 client.loadSampleSong()
