@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Result for {{ song_name }}</title>
+</head>
+<body>
+    <h1>Result for {{ song_name }}</h1>
+    <h2>Vocals</h2>
+    <audio controls>
+        <source src="{{ vocals_path }}" type="audio/wav">
+        Your browser does not support the audio element.
+    </audio>
+
+    <h2>Accompaniment</h2>
+    <audio controls>
+        <source src="{{ accompaniment_path }}" type="audio/wav">
+        Your browser does not support the audio element.
+    </audio>
+
+    <a href="/edit">Back to Edit Page</a>
+</body>
+</html>
