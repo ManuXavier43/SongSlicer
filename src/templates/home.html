@@ -178,9 +178,12 @@
             <h2>Top Songs:</h2>
             <ul>
                 <li>
+                    {% if song_name %}
+                    <div>{{ song_name }}</div>
+                    {% endif %}
                     {% if audio_url %}
                     <!-- Audio player is displayed -->
-                    <p>Audio URL: {{ audio_url }}</p>
+                    <!-- <p>Audio URL: {{ audio_url }}</p> -->
                     <audio controls>
                         <source src="{{ audio_url }}" type="audio/mpeg">
                         Your browser does not support the audio element.
@@ -189,7 +192,13 @@
                         <!-- Message displayed if file doesn't exist -->
                         <p>No audio file available to play.</p>
                     {% endif %}
-            
+                    {% if song_img %}
+                    <!-- Image is displayed -->
+                    <img src="{{ song_img }}" alt="Album Cover" style="width: 96px; margin-top: 10px;" />
+                    {% else %}
+                        <!-- Message displayed if file doesn't exist -->
+                        <p>No image available.</p>
+                    {% endif %}
                 </li>
                 <li>
                     <div>Song 4</div>
