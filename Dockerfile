@@ -4,9 +4,13 @@ FROM python:3.9-slim
 # Set the working directory inside the container
 WORKDIR /app
 
+RUN mkdir -p /app/src/deezer/music_in
+
 # Install system dependencies for tkinter
 RUN apt-get update && apt-get install -y \
     tk \
+    ffmpeg \
+    libsndfile1 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -18,6 +22,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application files
 COPY . .
+
+# Set PYTHONPATH to include /app
+ENV PYTHONPATH=/app
 
 # Expose Flask's default port
 EXPOSE 5000
