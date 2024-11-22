@@ -1,14 +1,21 @@
+import time
 import spotipy, os #os for client secrets
 import requests #Needed for fetching previews of songs
 from dotenv import load_dotenv#Load environment variables
 
 from dotenv import load_dotenv
 from spotipy.oauth2 import SpotifyOAuth #Needed to connect to account
+#Setup console logs
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
 #Spotipy Connector class
 class SpotipyClient:
-    def __init__(self):
+    def __init__(self, base_dir):
         self.sp = None
+        self.base_dir = base_dir
     def connectToSpotipy(self):
+        logging.debug("Connecting to Spotify API...") 
         #Connect to Spotify API
         try:
             load_dotenv()
@@ -21,24 +28,38 @@ class SpotipyClient:
             print("Connected!")
         except Exception as e:
             print(f"Cannot connect to Spotify API: {e}")
-    def loadSampleSong(self):
-        query = input("Enter an artist to search: ")
+    def loadSampleSong(self,query):
+        # query = input("Enter an artist to search: ")
         search_result = self.sp.search(q={query}, limit=1)
         #Search an artist and cycle through their previews
         artist_uri = search_result['tracks']['items'][0]['artists'][0]['uri']
         tracks = self.sp.artist_top_tracks(artist_uri, country='US')
-        for track in tracks['tracks'][:5]:
-            print('track    : ' + track['name'])
-            print('audio    : ' + track['preview_url'])
-            preview_url = track['preview_url']
-            print('cover art: ' + track['album']['images'][0]['url'])
-            print()
+        preview_url = tracks['tracks'][0]['preview_url']
+        # for track in tracks['tracks'][:5]:
+        #     print('track    : ' + track['name'])
+        #     print('audio    : ' + track['preview_url'])
+        #     preview_url = track['preview_url']
+        #     print('cover art: ' + track['album']['images'][0]['url'])
+        #     print()
         try:
+            #Find directory to save music
+            music_dir = os.path.join(self.base_dir, "music")
+            #ensure it exists
+            os.makedirs(music_dir, exist_ok=True)
             response = requests.get(preview_url)
-            with open("preview.mp3", "wb") as file:
+            #unique timestamp per song
+            preview_filename = f"preview_{query.replace(' ', '_')}_{int(time.time())}.mp3"
+            #actual path for preview
+            preview_path = os.path.join(music_dir, preview_filename)
+            logging.debug(f"Absolute path to saved file: {os.path.abspath(preview_path)}")
+            #save to dir
+            with open(preview_path, "wb") as file:
                 file.write(response.content)
+                logging.debug(f"Preview saved to {preview_path}")
+                #only return filename as html knows the static folder
+                return preview_filename
         except Exception as e:
-            print(f"Connection error fetching preview: {e}")
+            logging.debug(f"Connection error fetching preview: {e}")
     def playCurrentTracks(self):
         #Play user's saved tracks
         sp = self.sp
@@ -66,7 +87,7 @@ class SpotipyClient:
                         break
         except Exception as e:
             print(f"Cannot fetch or play user's songs: {e}")
-client = SpotipyClient()
-client.connectToSpotipy()
-# client.playCurrentTracks()
-client.loadSampleSong()
+# client = SpotipyClient()
+# client.connectToSpotipy()
+# # client.playCurrentTracks()
+# client.loadSampleSong()

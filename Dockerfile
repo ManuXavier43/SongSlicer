@@ -23,8 +23,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the rest of the application files
 COPY . .
 
+# Set PYTHONPATH to include /app
+ENV PYTHONPATH=/app
+
 # Expose Flask's default port
-EXPOSE 5000
+EXPOSE 8080
 
 # Command to run the main script
 CMD ["python", "src/main.py"]

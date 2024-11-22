@@ -17,9 +17,9 @@ This project is a Python based audio splitter appilcation that uses pip librarie
 ## Run flask app using Docker
 
 ```docker build -t song-slicer .  ```
-```docker run -p 5000:5000 song-slicer```
+```docker run -p 8080:5000 song-slicer``` This maps the container port 5000 to local port 8080
 
-**Flask container URL:** http://127.0.0.1:5000/
+**Flask container URL:** http://127.0.0.1:8080/
 
 ## Run python app using Docker
 
