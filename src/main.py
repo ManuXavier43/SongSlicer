@@ -1,14 +1,14 @@
 import re
 import os
 from flask import Flask, render_template, request, redirect, url_for
-from deezer.test import split_vocals_instrumentals  # Ensure proper import
+from deezer.test import split_vocals_instrumentals  
 
 # Create a Flask application
 app = Flask(__name__)
 
-# Define directories
+
 MUSIC_IN_DIR = "/app/src/deezer/music_in"
-MUSIC_OUT_DIR = "/app/src/static/music_out"  # Update to use 'static' directory for serving files
+MUSIC_OUT_DIR = "/app/src/static/music_out" 
 
 # Define a route
 @app.route("/")

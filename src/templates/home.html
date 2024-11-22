@@ -1,24 +1,140 @@
-<!DOCTYPE html>
+<!DocType html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Result for {{ song_name }}</title>
+    <title>Home Page Song-Slicer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffb23e;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: rgb(255, 236, 88);
+            padding: 20px 20px;
+        }
+
+        .title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+        }
+        /* .logo img {
+            height: ;
+        } */
+        .content {
+            display: flex;
+            justify-content: space-around;
+            align-items: start;
+            padding: 100px 100px;
+            gap: 10%;
+        }
+
+        .recently-edited {
+            background: rgb(242, 242, 242);
+            padding: 10px;
+            border-radius: 35px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 50%;
+            position: absolute;
+            top: 150px; 
+            left: 300px; 
+            width: 400px;
+            height: 500px;
+        }
+       .top-songs {
+            background: rgb(242, 242, 242);
+            padding: 10px;
+            border-radius: 35px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 50%;
+            position: absolute;
+            top: 150px; 
+            left: 800px; 
+            width: 400px;
+            height: 500px;
+        }
+
+        h2 {
+            margin-bottom: 10px;
+            font-size: 1.7rem;
+        }
+ul {
+            list-style: none;
+            padding: 10px;
+            border-top: 1px solid grey;
+        }
+        ul:last-child {
+            border-bottom: none;
+        }
+
+        li {
+            padding: auto;
+            margin-bottom: 6px;
+            font: bold;
+            font-size: 1.5rem;
+            text-align: left;
+        }
+        p {
+            font-size: 1.2rem;
+            color: #333;
+            padding-bottom: 5px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Result for {{ song_name }}</h1>
-    <h2>Vocals</h2>
-    <audio controls>
-        <source src="{{ vocals_path }}" type="audio/wav">
-        Your browser does not support the audio element.
-    </audio>
+    <nav class="header">
+        <!-- <div class="logo">
+            <img src="https://via.placeholder.com/50" alt="Logo">
+        </div> -->
+        <div class="title">SONG-SLICER</div>
+        <!-- <div class="profile">
+            <img src="https://via.placeholder.com/50" alt="Profile Picture">
+        </div> -->
+    </nav>
 
-    <h2>Accompaniment</h2>
-    <audio controls>
-        <source src="{{ accompaniment_path }}" type="audio/wav">
-        Your browser does not support the audio element.
-    </audio>
-
-    <a href="/edit">Back to Edit Page</a>
+    <div class="content">
+        <div class="recently-edited">
+            <h2>Recently Edited:</h2>
+            <ul>
+                <li>
+                    <div>Song 1</div>
+                    <p>Song description.</p>
+                </li>
+                <li>
+                    <div>Song 2</div>
+                    <p>Song description.</p>
+                </li>
+                <li>
+                    <div>Song 3</div>
+                    <p>Song description.</p>
+                </li>
+            </ul>
+        </div>
+        <div class="top-songs">
+            <h2>Top Songs:</h2>
+            <ul>
+                <li>
+                    <div>Song 2</div>
+                    <p>Song description.</p>
+                </li>
+                <li>
+                    <div>Song 4</div>
+                    <p>Song description.</p>
+                </li>
+                <li>
+                    <div>Song 5</div>
+                    <p>Song description.</p>
+                </li>
+            </ul>
+        </div>
+    </div>
 </body>
 </html>
