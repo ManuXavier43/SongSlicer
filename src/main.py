@@ -2,7 +2,7 @@ from flask import Flask, request, render_template_string, url_for, send_from_dir
 from src.spotipy.test import SpotipyClient, logging
 import os
 
-app = Flask(__name__, static_folder="music",static_url_path="/")
+app = Flask(__name__, static_folder="deezer/music_in",static_url_path="/")
 
 #Spotipy class and dir so we know where to save music
 base_dir = os.path.dirname(os.path.abspath(__file__))

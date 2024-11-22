@@ -43,7 +43,7 @@ class SpotipyClient:
         #     print()
         try:
             #Find directory to save music
-            music_dir = os.path.join(self.base_dir, "music")
+            music_dir = os.path.join(self.base_dir, "deezer/music_in")
             #ensure it exists
             os.makedirs(music_dir, exist_ok=True)
             response = requests.get(preview_url)
