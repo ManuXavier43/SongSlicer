@@ -13,6 +13,7 @@ def home():
     result = None
     audio_url = None
     song_name = None
+    tracks = None
     if request.method == "POST":
         #Retrieve song search
         user_input = request.form.get("user_input")
@@ -23,7 +24,7 @@ def home():
         logging.info("Writing song...")
         saved_file,tracks = sp.loadSampleSong(user_input)  # Returns the unique filename
         file_path = os.path.join(app.static_folder, saved_file)
-        if os.path.exists(file_path): #try serve mp3 preview
+        if os.path.exists(file_path) and tracks: #try serve mp3 preview
         # Generate a URL to serve the file
             audio_url = url_for("static", filename=saved_file)
             logging.info(f"Audio file URL: {audio_url}")
@@ -31,7 +32,6 @@ def home():
             audio_url = None
             logging.warning(file_path)
             logging.warning("Audio file not found.")
-
     return render_template("home.html",audio_url=audio_url,tracks=tracks)
 
 @app.route("/edit")
