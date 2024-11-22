@@ -7,59 +7,99 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #ffb23e;
+            background-color: #8d63ff;
             text-align: center;
             margin: 0;
             padding: 0;
         }
         
-        header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background-color: rgb(255, 236, 88);
-            padding: 20px 20px;
+        .header {
+            display: flex; /* Flex layout for horizontal alignment */
+            align-items: center; /* Center items vertically */
+            justify-content: space-between; /* Space out items (logo/title on left, profile on right) */
+            background-color: rgb(63, 63, 63);
+            padding: 20px;
+            color: white;
         }
         
         .title {
-            font-size: 1.5rem;
+            font-size: 2.5rem;
             font-weight: bold;
             text-align: center;
-        }
-        /* .logo img {
-            height: ;
-        } */
-        .content {
-            display: flex;
-            justify-content: space-around;
-            align-items: start;
-            padding: 100px 100px;
-            gap: 10%;
+            flex: 1; /* Allow the title to take up the center space */
         }
 
-        .recently-edited {
-            background: rgb(242, 242, 242);
-            padding: 10px;
-            border-radius: 35px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            width: 50%;
-            position: absolute;
-            top: 150px; 
-            left: 300px; 
-            width: 400px;
-            height: 500px;
+        .profile img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%; /* Makes the image circular */
+            cursor: pointer; /* Adds a clickable effect */
         }
-       .top-songs {
-            background: rgb(242, 242, 242);
+        .search-bar {
+            display: flex;
+            justify-content: center; /* Center the search bar horizontally */
+            align-items: center; /* Vertically center items within the search bar */
+            margin: 40px auto; /* Add spacing above and below the search bar */
+            padding: 20px;
+            gap: 10px; /* Space between input and button */
+        }
+
+        .search-bar input {
+            width: 60%; /* Make the input field take up most of the space */
+            max-width: 500px; /* Constrain the width */
             padding: 10px;
-            border-radius: 35px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .search-bar button {
+            padding: 10px 20px;
+            background-color: #000000;
+            color: #cccccc;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .search-bar button:hover {
+            background-color: #4b36cc; /* Darker shade on hover */
+        }
+
+        .content {
+            display: flex;
+            justify-content: center; /* Center the boxes horizontally */
+            align-items: flex-start; /* Align the boxes to the top */
+            padding: 20px;
+            gap: 100px; /* Add space between the boxes */
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            max-width: 1200px; /* Constrain the overall width of the content */
+            margin: 50px auto; /* Center the content on the page */
+        }
+
+        .recently-edited, .top-songs {
+            flex: 1; /* Equal space for both containers */
+            max-width: 45%; /* Prevent them from becoming too wide */
+            min-width: 300px; /* Set a minimum width for small screens */
+            background: rgb(230, 230, 230);
+            padding: 20px;
+            border-radius: 15px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            width: 50%;
-            position: absolute;
-            top: 150px; 
-            left: 800px; 
-            width: 400px;
-            height: 500px;
+            height: auto; /* Flexible height for varying content */
+        }
+
+        /* Center content on smaller screens */
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column; /* Stack boxes vertically */
+                align-items: center; /* Center each box */
+            }
+
+            .recently-edited, .top-songs {
+                max-width: 80%; /* Let each box take up most of the screen width */
+            }
         }
 
         h2 {
@@ -83,6 +123,11 @@
             font-size: 1.5rem;
             text-align: left;
         }
+        li:hover {
+            background-color: #f0f0f0;
+            cursor: pointer;
+        }
+
         p {
             font-size: 1.2rem;
             color: #333;
@@ -96,10 +141,14 @@
             <img src="https://via.placeholder.com/50" alt="Logo">
         </div> -->
         <div class="title">SONG-SLICER</div>
-        <!-- <div class="profile">
+        <div class="profile">
             <img src="https://via.placeholder.com/50" alt="Profile Picture">
-        </div> -->
+        </div>
     </nav>
+    <div class="search-bar">
+        <input type="text" placeholder="Search for songs..." />
+        <button>Search</button>
+    </div>
 
     <div class="content">
         <div class="recently-edited">
@@ -138,4 +187,52 @@
         </div>
     </div>
 </body>
+
+
+<!-- <script>
+    async function searchSong() {
+        const query = document.getElementById('search-input').value;
+
+        if (!query) {
+            alert('Please enter a search term!');
+            return;
+        }
+
+        try {
+            // Send the query to the backend
+            const response = await fetch('http://localhost:5000/search', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ query }),
+            });
+
+            const result = await response.json();
+
+            // Handle errors
+            if (!response.ok) {
+                alert(result.error || 'An error occurred!');
+                return;
+            }
+
+            // Display search result
+            const resultDiv = document.getElementById('search-result');
+            resultDiv.innerHTML = `
+                <h3>${result.track_name} by ${result.artist}</h3>
+                <audio controls>
+                    <source src="${result.preview_url}" type="audio/mpeg">
+                    Your browser does not support the audio tag.
+                </audio>
+                <div>
+                    <img src="${result.album_cover}" alt="Album Cover" style="width: 200px; margin-top: 10px;" />
+                </div>
+            `;
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+        }
+    }
+</script> -->
+
 </html>
