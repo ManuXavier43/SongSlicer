@@ -21,7 +21,7 @@ def home():
 
         result = f"Connected to Spotipy with query: {user_input}"  #debug html
         logging.info("Writing song...")
-        saved_file,song_name,song_img = sp.loadSampleSong(user_input)  # Returns the unique filename
+        saved_file,tracks = sp.loadSampleSong(user_input)  # Returns the unique filename
         file_path = os.path.join(app.static_folder, saved_file)
         if os.path.exists(file_path): #try serve mp3 preview
         # Generate a URL to serve the file
@@ -32,7 +32,7 @@ def home():
             logging.warning(file_path)
             logging.warning("Audio file not found.")
 
-    return render_template("home.html",audio_url=audio_url,song_name=song_name,song_img=song_img)
+    return render_template("home.html",audio_url=audio_url,tracks=tracks)
 
 @app.route("/edit")
 def edit_page():

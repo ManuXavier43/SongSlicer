@@ -34,9 +34,10 @@ class SpotipyClient:
         #Search an artist and cycle through their previews
         artist_uri = search_result['tracks']['items'][0]['artists'][0]['uri']
         tracks = self.sp.artist_top_tracks(artist_uri, country='US')
-        preview_url = tracks['tracks'][0]['preview_url']
-        track_name = tracks['tracks'][0]['name']
-        track_img = tracks['tracks'][0]['album']['images'][0]['url']
+        tracks = tracks["tracks"][:3]
+        preview_url = tracks[0]['preview_url']
+        # track_name = tracks['tracks'][0]['name']
+        # track_img = tracks['tracks'][0]['album']['images'][0]['url']
         # for track in tracks['tracks'][:5]:
         #     print('track    : ' + track['name'])
         #     print('audio    : ' + track['preview_url'])
@@ -59,7 +60,7 @@ class SpotipyClient:
                 file.write(response.content)
                 logging.debug(f"Preview saved to {preview_path}")
                 #only return filename as html knows the static folder
-                return preview_filename,track_name,track_img
+                return preview_filename,tracks
         except Exception as e:
             logging.debug(f"Connection error fetching preview: {e}")
     def playCurrentTracks(self):

@@ -177,37 +177,39 @@
         <div class="top-songs">
             <h2>Top Songs:</h2>
             <ul>
+                {% for track in tracks %}
                 <li>
-                    {% if song_name %}
-                    <div>{{ song_name }}</div>
+                    {% if track.name %}
+                    <div>{{ track.name }}</div>
                     {% endif %}
-                    {% if audio_url %}
+                    {% if track.preview_url %}
                     <!-- Audio player is displayed -->
                     <!-- <p>Audio URL: {{ audio_url }}</p> -->
                     <audio controls>
-                        <source src="{{ audio_url }}" type="audio/mpeg">
+                        <source src="{{ track.preview_url }}" type="audio/mpeg">
                         Your browser does not support the audio element.
                     </audio>
                     {% else %}
                         <!-- Message displayed if file doesn't exist -->
                         <p>No audio file available to play.</p>
                     {% endif %}
-                    {% if song_img %}
+                    {% if track.album.images and track.album.images|length > 0 %}
                     <!-- Image is displayed -->
-                    <img src="{{ song_img }}" alt="Album Cover" style="width: 96px; margin-top: 10px;" />
+                    <img src="{{ track.album.images[0].url }}" alt="Album Cover" style="width: 96px; margin-top: 10px;" />
                     {% else %}
                         <!-- Message displayed if file doesn't exist -->
                         <p>No image available.</p>
                     {% endif %}
                 </li>
-                <li>
+                {% endfor %}
+                <!-- <li>
                     <div>Song 4</div>
                     <p>Song description.</p>
                 </li>
                 <li>
                     <div>Song 5</div>
                     <p>Song description.</p>
-                </li>
+                </li> -->
             </ul>
         </div>
     </div>
