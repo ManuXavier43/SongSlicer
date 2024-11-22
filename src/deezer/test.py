@@ -3,8 +3,8 @@ import os
 
 def split_vocals_instrumentals():
     # Define the input and output directories
-    music_in_dir = "./music_in"
-    music_out_dir = "./music_out"
+    music_in_dir = "/app/src/deezer/music_in"
+    music_out_dir = "/app/src/deezer/music_out"
     songs = [f for f in os.listdir(music_in_dir) if os.path.isfile(os.path.join(music_in_dir, f))]
     
     if not songs:

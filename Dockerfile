@@ -27,7 +27,7 @@ COPY . .
 ENV PYTHONPATH=/app
 
 # Expose Flask's default port
-EXPOSE 5000
+EXPOSE 8080
 
 # Command to run the main script
 CMD ["python", "src/main.py"]
