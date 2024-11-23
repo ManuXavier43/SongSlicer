@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Page Song-Slicer</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -155,25 +156,24 @@
         <button type="submit">Submit</button>
     </form>
 
-
-    <div class="content">
-        <div class="recently-edited">
-            <h2>Recently Edited:</h2>
-            <ul>
+    <div class="recently-edited">
+        <h2>Recently Edited Songs:</h2>
+        <ul>
+            {% for song in songs %}
                 <li>
-                    <div>Song 1</div>
-                    <p>Song description.</p>
+                    <strong>{{ song }}</strong>
+                    <audio controls>
+                        <source src="{{ url_for('static', filename=song) }}" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                    <form action="{{ url_for('edit_page') }}" method="post" style="display:inline;">
+                        <input type="hidden" name="song_name" value="{{ song }}">
+                        <button type="submit">Split Song</button>
+                    </form>
                 </li>
-                <li>
-                    <div>Song 2</div>
-                    <p>Song description.</p>
-                </li>
-                <li>
-                    <div>Song 3</div>
-                    <p>Song description.</p>
-                </li>
-            </ul>
-        </div>
+            {% endfor %}
+        </ul>
+    </div>
         <div class="top-songs">
             <h2>Top Songs:</h2>
             <ul>
