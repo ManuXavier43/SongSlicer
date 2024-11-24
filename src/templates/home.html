@@ -160,7 +160,7 @@
     </div> -->
     <form class="search-bar" method="post" action="/">
         <label for="user_input"></label>
-        <input type="text" id="user_input" name="user_input">
+        <input type="text" id="user_input" name="user_input" value="{{ request.args.get('search', '') }}" autocomplete="off">
         <button type="submit">Submit</button>
     </form>
 
@@ -211,7 +211,7 @@
                                 <p>No image available.</p>
                             {% endif %}
                             <!-- Save song button posts the track url and name to save route-->
-                            <form class="search-bar" method="POST" action="/save_song">
+                            <form class="search-bar" method="POST" action="/" onsubmit="this.reset();">
                                 <input type="hidden" name="name" value="{{ track.name }}">
                                 <input type="hidden" name="preview_url" value="{{ track.preview_url }}">
                                 <button type="submit">Save Song</button>

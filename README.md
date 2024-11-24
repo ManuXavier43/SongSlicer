@@ -10,52 +10,34 @@ Song slicer is a python application proposal that allows you to slice songs to s
 + Week 4: Design home page, add spotify songs to home page, connect to spotify profile in app
 + Week 5: Saving track functionality in app, search songs by name, comparisions of graphs of different splits (possibly generate insights).
 
-# Setup
+# Intro
 
-This project is a Python based audio splitter appilcation that uses pip libraries.
+This project is a Flask app that uses the Deezer Spleeter to split songs into vocals and instrumentals. For demo purposes, previews can be fetched using the Spotify api.
 
-## Run flask app using Docker
+## Run Flask app using Docker
 
 ```docker build -t song-slicer .  ```
 ```docker run -p 8080:5000 song-slicer``` This maps the container port 5000 to local port 8080
 
 **Flask container URL:** http://127.0.0.1:8080/
 
-## Run python app using Docker
+# (DEBUGGING) Run python app using Docker
 
 ```docker build -t song-slicer .  ```
 ```docker run -it song-slicer /bin/bash```
 ```python src/[PATH_TO_PYTHON_FILE]```
 
-## OLD!!!!!!!!!!!!!!!
-## Dependencies
-this project makes use of the conda
-spleeter env makes use of py -v 3.8 for spleeter denpendancies
-run
+# Docker Dependencies
+Previously, this project made use of a virtual conda "spleeter" env with py -v 3.8 as spleeter has deprecated dependancies.
 "conda activate spleeter-env"
 
-**Spotipy:** 
-pip install spotipy
-Song samples are sourced from Spotify
+We decided to switch to a dockerfile that handles all the dependencies for this project so it no longer relies on an Anaconda environment. Here are some of the libraries we're using in our ```requirements.txt``` file.
 
-**Dotenv**
-pip install dotenv
+**Spotipy:** 
+Song samples are sourced from Spotify. The app connects to a demo account to fetch 30 second samples. They are saved to the ```music_in``` folder.
 
 **Spleeter**
-pip install spleeter
+Spleeter is used to isolate the source track into vocals, instrumentals, etc.
 
-**CustomTKinter**
-pip install customtkinter
-CustomTKinter is our app GUI
-
-The following libraries are for audio analysis and plotting waveforms
-**MatplotLib**
-pip install matplotlib
-
-**Numpy**
-pip install numpy
-
-## Classes
-
-+ ```song-slicer\src\spotipy\test.py``` connects to your Spotify account and plays your saved library
-+ ```song-slicer\src\main.py``` Draws app
+**Flask**
+Song-Slicer is built using Flask for its GUI. It handles POST and GET requests. Tracks are served using different routes and there's mainly a home, edit and results page.

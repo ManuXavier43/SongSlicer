@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, url_for, redirect, send_from_directory
+from flask import Flask, request, render_template, url_for, redirect
 from src.spotipy.test import SpotipyClient, logging
 from deezer.test import split_vocals_instrumentals
 import os, time
@@ -31,43 +31,49 @@ def home():
         songs = []  # Handle missing directory by assigning an empty list
 
     if request.method == "POST":
-        # Retrieve song search
-        user_input = request.form.get("user_input")
+        if "preview_url" in request.form and "name" in request.form:
+            # Get the preview URL from the form
+            preview_url = request.form.get("preview_url")
+            track_name = request.form.get("name") #Used to write filename
+            music_dir = os.path.join(sp.base_dir, "deezer/music_in") #Where to save music
+            try:
+                #ensure save dir exists
+                os.makedirs(music_dir, exist_ok=True)
+                #get song
+                response = requests.get(preview_url)
+                #unique timestamp per song
+                preview_filename = f"preview_{track_name.replace(' ', '_')}_{int(time.time())}.mp3"
+                #actual path for preview
+                preview_path = os.path.join(music_dir, preview_filename)
+                logging.debug(f"Absolute path to saved file: {os.path.abspath(preview_path)}")
+                #save to dir
+                with open(preview_path, "wb") as file:
+                    file.write(response.content)
+                    logging.debug(f"Preview saved to {preview_path}")
+                    #only return filename as html knows the static folder
+                    # return f"Song saved as {preview_filename}"
+                return redirect(url_for('home'))
+            except Exception as e:
+                logging.debug(f"Connection error fetching preview: {e}")
+
+        else:    
+            # Retrieve song search
+            user_input = request.form.get("user_input")
+            if user_input and user_input.strip():
+                return redirect(url_for('home', search=user_input))
+            return redirect(url_for('home'))
+            
+    search_query = request.args.get("search")
+    if search_query:
         logging.info("Attempting to connect to Spotipy...")
         sp.connectToSpotipy()  # Connect
-
         logging.info("Fetching tracks...")
-        tracks = sp.loadSampleSong(user_input)  # Returns top 3 results
+        tracks = sp.loadSampleSong(search_query)  # Returns top 3 results
         
     # Render the template with updated song list
     return render_template("home.html", tracks=tracks, songs=songs)
 
 # Save button route for any of the top 3 songs
-@app.route("/save_song", methods=["POST"])
-def save_song():
-    # Get the preview URL from the form
-    preview_url = request.form.get("preview_url")
-    track_name = request.form.get("name") #Used to write filename
-    music_dir = os.path.join(sp.base_dir, "deezer/music_in") #Where to save music
-    if preview_url and track_name:
-        try:
-            #ensure save dir exists
-            os.makedirs(music_dir, exist_ok=True)
-            #get song
-            response = requests.get(preview_url)
-            #unique timestamp per song
-            preview_filename = f"preview_{track_name.replace(' ', '_')}_{int(time.time())}.mp3"
-            #actual path for preview
-            preview_path = os.path.join(music_dir, preview_filename)
-            logging.debug(f"Absolute path to saved file: {os.path.abspath(preview_path)}")
-            #save to dir
-            with open(preview_path, "wb") as file:
-                file.write(response.content)
-                logging.debug(f"Preview saved to {preview_path}")
-                #only return filename as html knows the static folder
-                return f"Song saved as {preview_filename}"
-        except Exception as e:
-            logging.debug(f"Connection error fetching preview: {e}")
 
 @app.route("/edit", methods=["GET", "POST"])
 def edit_page():

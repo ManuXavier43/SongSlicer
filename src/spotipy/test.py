@@ -28,6 +28,7 @@ class SpotipyClient:
             print("Connected!")
         except Exception as e:
             print(f"Cannot connect to Spotify API: {e}")
+            return False
     def loadSampleSong(self,query):
         # query = input("Enter an artist to search: ")
         try:
@@ -39,6 +40,7 @@ class SpotipyClient:
             return tracks
         except Exception as e:
             logging.debug(f"Cannot fetch artist's top tracks: {e}")
+            return None
         # preview_url = tracks[0]['preview_url']
         # # track_name = tracks['tracks'][0]['name']
         # # track_img = tracks['tracks'][0]['album']['images'][0]['url']
