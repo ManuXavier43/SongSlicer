@@ -68,6 +68,11 @@
         .search-bar button:hover {
             background-color: #4b36cc; /* Darker shade on hover */
         }
+        .center{
+            display: flex;
+            justify-content: center; /* Center the search bar horizontally */
+            align-items: center; /* Vertically center items within the search bar */
+        }
 
         .content {
             display: flex;
@@ -186,24 +191,27 @@
                         {% if track.name %}
                         <div>{{ track.name }}</div>
                         {% endif %}
-                        {% if track.preview_url %}
-                        <!-- Audio player is displayed -->
-                        <!-- <p>Audio URL: {{ audio_url }}</p> -->
-                        <audio controls>
-                            <source src="{{ track.preview_url }}" type="audio/mpeg">
-                            Your browser does not support the audio element.
-                        </audio>
-                        {% else %}
-                            <!-- Message displayed if file doesn't exist -->
-                            <p>No audio file available to play.</p>
-                        {% endif %}
-                        {% if track.album.images and track.album.images|length > 0 %}
-                        <!-- Image is displayed -->
-                        <img src="{{ track.album.images[0].url }}" alt="Album Cover" style="width: 96px; margin-top: 10px;" />
-                        {% else %}
-                            <!-- Message displayed if file doesn't exist -->
-                            <p>No image available.</p>
-                        {% endif %}
+                        <div class="center">
+                            {% if track.preview_url %}
+                            <!-- Audio player is displayed -->
+                            <!-- <p>Audio URL: {{ audio_url }}</p> -->
+                            <audio controls>
+                                <source src="{{ track.preview_url }}" type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
+                            {% else %}
+                                <!-- Message displayed if file doesn't exist -->
+                                <p>No audio file available to play.</p>
+                            {% endif %}
+                            {% if track.album.images and track.album.images|length > 0 %}
+                            <!-- Image is displayed -->
+                            <img src="{{ track.album.images[0].url }}" alt="Album Cover" style="width: 96px; margin-top: 10px;" />
+                            {% else %}
+                                <!-- Message displayed if file doesn't exist -->
+                                <p>No image available.</p>
+                            {% endif %}
+                            <div class="search-bar"><button type="submit">Save Song</button></div>
+                        </div>
                     </li>
                     {% endfor %}
                 {% else %}
