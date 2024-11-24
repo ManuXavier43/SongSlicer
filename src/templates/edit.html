@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SONG-SLICER - Edit Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #8d63ff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgb(63, 63, 63);
+            padding: 20px;
+            color: #fff;
+            border-bottom: 2px solid #ddd;
+            width: 100%;
+            position: sticky;
+            top: 0;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            text-align: center;
+            flex: 1;
+        }
+
+        /* Main Content */
+        .edit-container {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            align-items: center;
+            gap: 20px;
+            flex: 1;
+        }
+
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .form-container label {
+            font-size: 1.5rem;
+            color: #fff;
+        }
+
+        .form-container select, .form-container button {
+            padding: 10px;
+            font-size: 1.2rem;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .form-container button {
+            background-color: #ffa33a;
+            color: #fff;
+            transition: background-color 0.3s ease;
+        }
+
+        .form-container button:hover {
+            background-color: #e6952a;
+        }
+
+        /* Actions and Song Controls */
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .action-btn {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .save {
+            background-color: #4caf50;
+        }
+
+        .edit {
+            background-color: #e91e63;
+        }
+
+        /* Footer Controls */
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            border-top: 2px solid #ddd;
+            background-color: #383838;
+            position: sticky;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .sliders {
+            display: flex;
+            gap: 50px;
+            align-items: center;
+            margin-left: auto;
+        }
+
+        .sliders label {
+            font-size: 1.2rem;
+            color: #ddd;
+        }
+
+        .sliders input[type="range"] {
+            width: 100px;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <h1 class="title">SONG-SLICER - Edit Page</h1>
+    </header>
+
+    <!-- Main Content -->
+    <main class="edit-container">
+        <div class="form-container">
+            <form action="/edit" method="POST">
+                <label for="song">Select a Song:</label>
+                <select name="song" id="song">
+                    {% for song in songs %}
+                        <option value="{{ song }}">{{ song }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit">Split Song</button>
+            </form>
+        </div>
+
+        <!-- Additional Actions -->
+        <div class="actions">
+            <button class="action-btn save">Save</button>
+            <button class="action-btn edit">Edit</button>
+        </div>
+    </main>
+
+    <!-- Footer Controls -->
+     <!--  <footer class="controls"></footer>
+        <div class="sliders">
+            <div>
+                <label>Volume</label>
+                <input type="range" min="0" max="100">
+            </div>
+            <div>
+                <label>Sample rate</label>
+                <input type="range" min="0" max="100">
+                <span>44000Hz</span>
+            </div>
+            <div>
+                <label>Frequency</label>
+                <input type="range" min="0" max="100">
+            </div>
+            <div>
+                <label>Time</label>
+                <input type="range" min="0" max="100">
+                <span>0:00/0:20s</span>
+            </div>
+        </div>
+    </footer> -->
+</body>
+</html>

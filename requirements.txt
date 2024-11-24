@@ -1,0 +1,9 @@
+spleeter
+spotipy
+python-dotenv
+customtkinter
+flask==2.0.3
+werkzeug==2.0.3
+numpy<2.0
+tensorflow==2.10.0
+tensorflow-cpu==2.10.0

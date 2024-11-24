@@ -1,28 +1,104 @@
-import customtkinter as ctk
+from flask import Flask, request, render_template, url_for, redirect
+from src.spotipy.test import SpotipyClient, logging
+from deezer.test import split_vocals_instrumentals
+import os, time
+import re
+import requests
 
-class App():
-    #Start the app
-    def __init__(self):
-        #Make app window called root
-        self.root = ctk.CTk()
-        #Get screen size of the user
-        self.screen_height = self.root.winfo_screenheight()
-        self.screen_width = self.root.winfo_screenwidth()
-        #Color scheme
-        ctk.set_appearance_mode('light')
-        ctk.set_default_color_theme('green')
-        #Set screen size
-        self.root.geometry(f"{self.screen_width}x{self.screen_height}")
+# Create a Flask application
+app = Flask(__name__, static_folder="static", static_url_path="/static")
 
-        #Create a frame to animate app
-        self.frame = ctk.CTkFrame(master=self.root)
-        #Set the window to fullscreen mode on startup with a short delay to centre it
-        #Define an anonymous function using lambda to expand screen after a 10ms delay
-        self.root.after(10, lambda: self.root.state("zoomed"))
-        self.frame.pack(expand=True, fill='both')
+# Spotipy class and dir so we know where to save music
+base_dir = os.path.dirname(os.path.abspath(__file__))
+sp = SpotipyClient(base_dir)
 
-        self.root.mainloop()
-    def draw(self):
-        #This will draw all the buttons and screen elements
-        pass #Remove this line after adding code
-App().startApp()
+MUSIC_IN_DIR = "/app/src/deezer/music_in"
+MUSIC_OUT_DIR = "/app/src/static/music_out"
+
+@app.route("/", methods=["GET", "POST"])
+def home():
+    result = None
+    audio_url = None
+    song_name = None
+    tracks = None
+    
+    try:
+        # Get the list of songs in music_in directory
+        songs = [f for f in os.listdir(MUSIC_IN_DIR) if os.path.isfile(os.path.join(MUSIC_IN_DIR, f))]
+        logging.info(f"Songs found in {MUSIC_IN_DIR}: {songs}")  # Debugging log
+    except FileNotFoundError:
+        logging.error(f"Directory {MUSIC_IN_DIR} not found.")
+        songs = []  # Handle missing directory by assigning an empty list
+
+    if request.method == "POST":
+        if "preview_url" in request.form and "name" in request.form:
+            # Get the preview URL from the form
+            preview_url = request.form.get("preview_url")
+            track_name = request.form.get("name") #Used to write filename
+            music_dir = os.path.join(sp.base_dir, "deezer/music_in") #Where to save music
+            try:
+                #ensure save dir exists
+                os.makedirs(music_dir, exist_ok=True)
+                #get song
+                response = requests.get(preview_url)
+                #unique timestamp per song
+                preview_filename = f"preview_{track_name.replace(' ', '_')}_{int(time.time())}.mp3"
+                #actual path for preview
+                preview_path = os.path.join(music_dir, preview_filename)
+                logging.debug(f"Absolute path to saved file: {os.path.abspath(preview_path)}")
+                #save to dir
+                with open(preview_path, "wb") as file:
+                    file.write(response.content)
+                    logging.debug(f"Preview saved to {preview_path}")
+                    #only return filename as html knows the static folder
+                    # return f"Song saved as {preview_filename}"
+                return redirect(url_for('home'))
+            except Exception as e:
+                logging.debug(f"Connection error fetching preview: {e}")
+
+        else:    
+            # Retrieve song search
+            user_input = request.form.get("user_input")
+            if user_input and user_input.strip():
+                return redirect(url_for('home', search=user_input))
+            return redirect(url_for('home'))
+            
+    search_query = request.args.get("search")
+    if search_query:
+        logging.info("Attempting to connect to Spotipy...")
+        sp.connectToSpotipy()  # Connect
+        logging.info("Fetching tracks...")
+        tracks = sp.loadSampleSong(search_query)  # Returns top 3 results
+        
+    # Render the template with updated song list
+    return render_template("home.html", tracks=tracks, songs=songs)
+
+# Save button route for any of the top 3 songs
+
+@app.route("/edit", methods=["GET", "POST"])
+def edit_page():
+    songs = [f for f in os.listdir(MUSIC_IN_DIR) if os.path.isfile(os.path.join(MUSIC_IN_DIR, f))]
+
+    if request.method == "POST":
+        selected_song = request.form.get("song")
+        if selected_song:
+            # Call the function to split the selected song with the correct arguments
+            split_vocals_instrumentals(MUSIC_IN_DIR, MUSIC_OUT_DIR, selected_song)
+            return redirect(url_for('results_page', song=selected_song))
+
+    return render_template("edit.html", songs=songs)
+
+@app.route("/results")
+def results_page():
+    song = request.args.get("song")
+    sanitized_song_name = re.sub(r'[^a-zA-Z0-9]', '_', os.path.splitext(song)[0])
+
+    # Update paths to match where files are actually saved in the static directory
+    vocals_file = f"music_out/{sanitized_song_name}/vocals.wav"
+    accompaniment_file = f"music_out/{sanitized_song_name}/accompaniment.wav"
+
+    # Render the template with the paths to the audio files
+    return render_template("results.html", vocals_file=vocals_file, accompaniment_file=accompaniment_file)
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
