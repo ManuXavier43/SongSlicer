@@ -210,7 +210,12 @@
                                 <!-- Message displayed if file doesn't exist -->
                                 <p>No image available.</p>
                             {% endif %}
-                            <div class="search-bar"><button type="submit">Save Song</button></div>
+                            <!-- Save song button posts the track url and name to save route-->
+                            <form class="search-bar" method="POST" action="/save_song">
+                                <input type="hidden" name="name" value="{{ track.name }}">
+                                <input type="hidden" name="preview_url" value="{{ track.preview_url }}">
+                                <button type="submit">Save Song</button>
+                            </form>
                         </div>
                     </li>
                     {% endfor %}
