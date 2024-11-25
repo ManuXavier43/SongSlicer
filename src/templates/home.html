@@ -18,7 +18,7 @@
             display: flex; /* Flex layout for horizontal alignment */
             align-items: center; /* Center items vertically */
             justify-content: space-between; /* Space out items (logo/title on left, profile on right) */
-            background-color: rgb(63, 63, 63);
+            background-color: rgb(0, 0, 0);
             padding: 20px;
             color: white;
         }
@@ -139,7 +139,7 @@
 
         p {
             font-size: 1.2rem;
-            color: #333;
+            color: #000000;
             padding-bottom: 5px;
         }
     </style>
@@ -171,10 +171,10 @@
                 <li>
                     <strong>{{ song }}</strong>
                     <audio controls>
-                        <source src="{{ url_for('static', filename=song) }}" type="audio/mpeg">
+                        <source src="{{ url_for('serve_music_in', filename=song) }}" type="audio/mpeg">
                         Your browser does not support the audio element.
                     </audio>
-                    <form action="{{ url_for('edit_page') }}" method="post" style="display:inline;">
+                    <form class="search-bar" action="{{ url_for('edit_page') }}" method="post" style="display:inline;">
                         <input type="hidden" name="song_name" value="{{ song }}">
                         <button type="submit">Split Song</button>
                     </form>
