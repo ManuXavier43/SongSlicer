@@ -75,6 +75,8 @@ def results_page():
 
     # Render the template with the paths to the audio files
     return render_template("results.html", vocals_file=vocals_file, accompaniment_file=accompaniment_file)
-
+@app.route('/music_in/<path:filename>')
+def serve_music_in(filename):
+    return send_from_directory(MUSIC_IN_DIR, filename)
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
