@@ -75,30 +75,26 @@
         }
 
         .content {
-            display: flex;
-            justify-content: center; /* Center the boxes horizontally */
-            align-items: flex-start; /* Align the boxes to the top */
-            padding: 20px;
-            gap: 100px; /* Add space between the boxes */
-            flex-wrap: wrap; /* Allow wrapping on smaller screens */
-            max-width: 1200px; /* Constrain the overall width of the content */
-            margin: 50px auto; /* Center the content on the page */
+            display: flex; 
+            justify-content: space-between;
+            align-items: flex-start; 
+            padding: 30px;
+            gap: 50px; 
+            flex-wrap: nowrap;
+            max-width: 1200px; 
+            margin: 0 auto;
         }
 
         .recently-edited, .top-songs {
-            flex: 1; /* Equal space for both containers */
-            max-width: 45%; /* Prevent them from becoming too wide */
-            min-width: 300px; /* Set a minimum width for small screens */
+            flex: 1;
+            max-width: 60%; 
+            min-width: 500px;
             background: rgb(230, 230, 230);
-            padding: 20px;
+            padding: 50px;
             border-radius: 15px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            height: auto; /* Flexible height for varying content */
-
-            margin: auto; /*center*/
-            margin-bottom: 20px;
         }
-
+        
         /* Center content on smaller screens */
         @media (max-width: 768px) {
             .content {
@@ -163,7 +159,7 @@
         <input type="text" id="user_input" name="user_input" value="{{ request.args.get('search', '') }}" autocomplete="off">
         <button type="submit">Submit</button>
     </form>
-
+<div class="content">
     <div class="recently-edited">
         <h2>Recently Edited Songs:</h2>
         <ul>
@@ -233,6 +229,7 @@
             </ul>
         </div>
     </div>
+    </div
 </body>
 
 
