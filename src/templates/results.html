@@ -293,19 +293,19 @@
 </head>
 <body>
     <nav class="header">
-        <!-- <div class="logo">
+        <div class="logo">
             <img src="https://via.placeholder.com/50" alt="Logo">
-        </div> -->
+        </div> 
         <div class="title">SONG-SLICER</div>
         <div class="profile">
             <img src="https://via.placeholder.com/50" alt="Profile Picture">
         </div>
     </nav>
-    <!-- <div class="search-bar">
+    <div class="search-bar">
         <input type="text" placeholder="Search for songs..." />
         <button>Search</button>
     </div> -->
-    <form class="search-bar" method="post" action="/">
+  <!--  <form class="search-bar" method="post" action="/">
         <label for="user_input"></label>
         <input type="text" id="user_input" name="user_input">
         <button type="submit">Submit</button>
@@ -340,28 +340,28 @@
                         <div>{{ track.name }}</div>
                         {% endif %}
                         {% if track.preview_url %}
-                        <!-- Audio player is displayed -->
+                         Audio player is displayed -->
                         <!-- <p>Audio URL: {{ audio_url }}</p> -->
-                        <audio controls>
+                      <!--   <audio controls>
                             <source src="{{ track.preview_url }}" type="audio/mpeg">
                             Your browser does not support the audio element.
                         </audio>
                         {% else %}
-                            <!-- Message displayed if file doesn't exist -->
+                           Message displayed if file doesn't exist 
                             <p>No audio file available to play.</p>
                         {% endif %}
                         {% if track.album.images and track.album.images|length > 0 %}
-                        <!-- Image is displayed -->
+                         Image is displayed 
                         <img src="{{ track.album.images[0].url }}" alt="Album Cover" style="width: 96px; margin-top: 10px;" />
                         {% else %}
-                            <!-- Message displayed if file doesn't exist -->
-                            <p>No image available.</p>
+                            Message displayed if file doesn't exist -->
+                         <!--    <p>No image available.</p>
                         {% endif %}
                     </li>
                     {% endfor %}
                 {% else %}
                     <p>No tracks found.</p>
-                {% endif %}
+                {% endif %}-->
                 <!-- <li>
                     <div>Song 4</div>
                     <p>Song description.</p>
@@ -370,10 +370,10 @@
                     <div>Song 5</div>
                     <p>Song description.</p>
                 </li> -->
-            </ul>
+           <!--  </ul>
         </div>
     </div>
-</body>
+</body> -->
 
 
 <!-- <script>
