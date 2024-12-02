@@ -199,9 +199,9 @@
                                 <!-- Message displayed if file doesn't exist -->
                                 <p>No audio file available to play.</p>
                             {% endif %}
-                            {% if track.album.images and track.album.images|length > 0 %}
+                            {% if track.album_image %}
                             <!-- Image is displayed -->
-                            <img src="{{ track.album.images[0].url }}" alt="Album Cover" style="width: 96px; margin-top: 10px;" />
+                            <img src="{{ track.album_image }}" alt="Album Cover" style="width: 96px; margin-top: 10px;" />
                             {% else %}
                                 <!-- Message displayed if file doesn't exist -->
                                 <p>No image available.</p>

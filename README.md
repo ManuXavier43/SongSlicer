@@ -33,8 +33,8 @@ Previously, this project made use of a virtual conda "spleeter" env with py -v 3
 
 We decided to switch to a dockerfile that handles all the dependencies for this project so it no longer relies on an Anaconda environment. Here are some of the libraries we're using in our ```requirements.txt``` file.
 
-**Spotipy:** 
-Song samples are sourced from Spotify. The app connects to a demo account to fetch 30 second samples. They are saved to the ```music_in``` folder.
+**Deezer:** 
+Previously samples were sourced from Spotify. Spotify made API changes so we switched to Deezer API. The app fetches 30 second samples from deezer API link. They are saved to the ```music_in``` folder.
 
 **Spleeter**
 Spleeter is used to isolate the source track into vocals, instrumentals, etc.
