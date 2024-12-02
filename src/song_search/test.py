@@ -1,16 +1,11 @@
-import time
-import spotipy, os, deezer #os for client secrets
-import requests #Needed for fetching previews of songs
-from dotenv import load_dotenv#Load environment variables
-
-from dotenv import load_dotenv
-from spotipy.oauth2 import SpotifyOAuth #Needed to connect to account
+import deezer 
+# from dotenv import load_dotenv #previously needed for spotipy
 #Setup console logs
 import logging
 logging.basicConfig(level=logging.DEBUG)
 
-#Spotipy Connector class
-class SpotipyClient:
+#Deezer Connector class
+class DeezerClient:
     def __init__(self, base_dir):
         self.base_dir = base_dir
         self.link = "https://api.deezer.com"

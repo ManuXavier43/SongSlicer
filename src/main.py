@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, url_for, redirect, send_from_directory
-from src.song_search.test import SpotipyClient, logging
+from src.song_search.test import DeezerClient, logging
 from splits.test import split_vocals_instrumentals
 import os, time
 import re
@@ -10,7 +10,7 @@ app = Flask(__name__, static_folder="static", static_url_path="/static")
 
 # Spotipy class and dir so we know where to save music
 base_dir = os.path.dirname(os.path.abspath(__file__))
-sp = SpotipyClient(base_dir)
+cli = DeezerClient(base_dir)
 
 MUSIC_IN_DIR = "/app/src/splits/music_in"
 MUSIC_OUT_DIR = "/app/src/static/music_out"
@@ -35,7 +35,7 @@ def home():
             # Get the preview URL from the form
             preview_url = request.form.get("preview_url")
             track_name = request.form.get("name") #Used to write filename
-            music_dir = os.path.join(sp.base_dir, "splits/music_in") #Where to save music
+            music_dir = os.path.join(cli.base_dir, "splits/music_in") #Where to save music
             try:
                 #ensure save dir exists
                 os.makedirs(music_dir, exist_ok=True)
@@ -66,9 +66,9 @@ def home():
     search_query = request.args.get("search")
     if search_query:
         # logging.info("Attempting to connect to Spotipy...")
-        # sp.connectToSpotipy()  # Connect
+        # cli.connectToSpotipy()  # Connect
         logging.info("Fetching tracks...")
-        tracks = sp.loadSampleSong(search_query)  # Returns top 3 results
+        tracks = cli.loadSampleSong(search_query)  # Returns top 3 results
         
     # Render the template with updated song list
     return render_template("home.html", tracks=tracks, songs=songs)
