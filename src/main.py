@@ -100,6 +100,16 @@ def results_page():
     # Render the template with the paths to the audio files
     return render_template("results.html", vocals_file=vocals_file, accompaniment_file=accompaniment_file)
 
+@app.route('/vocal_graphs', methods=['POST'])
+def handle_vocal_graph_request():
+    # Handle the form submission logic here
+    return "Vocal graph processing initiated!", 200
+
+@app.route('/acc_graphs', methods=['POST'])
+def handle_acc_graph_request():
+    # Handle the form submission logic here
+    return " Accompanient graph processing initiated!", 200
+
 @app.route('/music_in/<path:filename>')
 def serve_music_in(filename):
     return send_from_directory(MUSIC_IN_DIR, filename)

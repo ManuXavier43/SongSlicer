@@ -143,13 +143,18 @@
         <source src="{{ url_for('static', filename=vocals_file) }}" type="audio/wav">
         Your browser does not support the audio element.
     </audio>
+    <form class="search-bar" method="post" action="/vocal_graphs">
+        <button type="submit">Graph</button>
+    </form>
 
     <h2>Accompaniment</h2>
     <audio controls>
         <source src="{{ url_for('static', filename=accompaniment_file) }}" type="audio/wav">
         Your browser does not support the audio element.
     </audio>
-
+    <form class="search-bar" method="post" action="/acc_graphs">
+        <button type="submit">Graph</button>
+    </form>
     <br>
     <a href="{{ url_for('home') }}">Back to Home</a>
 </body>

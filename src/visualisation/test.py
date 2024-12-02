@@ -1,6 +1,7 @@
 import wave as wv   #To open wav files
 import numpy as np  #To analyse audio bits
 import matplotlib.pyplot as plt #To plot a frequency graph
+MUSIC_OUT_DIR = "/app/src/static/music_out"
 
 song = wv.open('./src/test_mp3s/thx.wav', 'rb')
 freq = song.getframerate() #Get the frequency of the audio
