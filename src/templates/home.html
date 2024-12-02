@@ -75,30 +75,26 @@
         }
 
         .content {
-            display: flex;
-            justify-content: center; /* Center the boxes horizontally */
-            align-items: flex-start; /* Align the boxes to the top */
-            padding: 20px;
-            gap: 100px; /* Add space between the boxes */
-            flex-wrap: wrap; /* Allow wrapping on smaller screens */
-            max-width: 1200px; /* Constrain the overall width of the content */
-            margin: 50px auto; /* Center the content on the page */
+            display: flex; 
+            justify-content: space-between;
+            align-items: flex-start; 
+            padding: 30px;
+            gap: 50px; 
+            flex-wrap: nowrap;
+            max-width: 1200px; 
+            margin: 0 auto;
         }
 
         .recently-edited, .top-songs {
-            flex: 1; /* Equal space for both containers */
-            max-width: 45%; /* Prevent them from becoming too wide */
-            min-width: 300px; /* Set a minimum width for small screens */
+            flex: 1;
+            max-width: 60%; 
+            min-width: 500px;
             background: rgb(230, 230, 230);
-            padding: 20px;
+            padding: 50px;
             border-radius: 15px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            height: auto; /* Flexible height for varying content */
-
-            margin: auto; /*center*/
-            margin-bottom: 20px;
         }
-
+        
         /* Center content on smaller screens */
         @media (max-width: 768px) {
             .content {
@@ -139,7 +135,7 @@
 
         p {
             font-size: 1.2rem;
-            color: #333;
+            color: #000000;
             padding-bottom: 5px;
         }
     </style>
@@ -163,7 +159,7 @@
         <input type="text" id="user_input" name="user_input" value="{{ request.args.get('search', '') }}" autocomplete="off">
         <button type="submit">Submit</button>
     </form>
-
+<div class="content">
     <div class="recently-edited">
         <h2>Recently Edited Songs:</h2>
         <ul>
@@ -171,10 +167,10 @@
                 <li>
                     <strong>{{ song }}</strong>
                     <audio controls>
-                        <source src="{{ url_for('static', filename=song) }}" type="audio/mpeg">
+                        <source src="{{ url_for('serve_music_in', filename=song) }}" type="audio/mpeg">
                         Your browser does not support the audio element.
                     </audio>
-                    <form action="{{ url_for('edit_page') }}" method="post" style="display:inline;">
+                    <form class="search-bar" action="{{ url_for('edit_page') }}" method="post" style="display:inline;">
                         <input type="hidden" name="song_name" value="{{ song }}">
                         <button type="submit">Split Song</button>
                     </form>
@@ -203,9 +199,9 @@
                                 <!-- Message displayed if file doesn't exist -->
                                 <p>No audio file available to play.</p>
                             {% endif %}
-                            {% if track.album.images and track.album.images|length > 0 %}
+                            {% if track.album_image %}
                             <!-- Image is displayed -->
-                            <img src="{{ track.album.images[0].url }}" alt="Album Cover" style="width: 96px; margin-top: 10px;" />
+                            <img src="{{ track.album_image }}" alt="Album Cover" style="width: 96px; margin-top: 10px;" />
                             {% else %}
                                 <!-- Message displayed if file doesn't exist -->
                                 <p>No image available.</p>
@@ -233,6 +229,7 @@
             </ul>
         </div>
     </div>
+    </div
 </body>
 
 

@@ -1,7 +1,7 @@
 spleeter
 spotipy
+deezer-python
 python-dotenv
-customtkinter
 flask==2.0.3
 werkzeug==2.0.3
 numpy<2.0

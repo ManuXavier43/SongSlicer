@@ -1,6 +1,6 @@
-from flask import Flask, request, render_template, url_for, redirect
-from src.spotipy.test import SpotipyClient, logging
-from deezer.test import split_vocals_instrumentals
+from flask import Flask, request, render_template, url_for, redirect, send_from_directory
+from src.song_search.test import DeezerClient, logging
+from splits.test import split_vocals_instrumentals
 import os, time
 import re
 import requests
@@ -10,9 +10,9 @@ app = Flask(__name__, static_folder="static", static_url_path="/static")
 
 # Spotipy class and dir so we know where to save music
 base_dir = os.path.dirname(os.path.abspath(__file__))
-sp = SpotipyClient(base_dir)
+cli = DeezerClient(base_dir)
 
-MUSIC_IN_DIR = "/app/src/deezer/music_in"
+MUSIC_IN_DIR = "/app/src/splits/music_in"
 MUSIC_OUT_DIR = "/app/src/static/music_out"
 
 @app.route("/", methods=["GET", "POST"])
@@ -35,7 +35,7 @@ def home():
             # Get the preview URL from the form
             preview_url = request.form.get("preview_url")
             track_name = request.form.get("name") #Used to write filename
-            music_dir = os.path.join(sp.base_dir, "deezer/music_in") #Where to save music
+            music_dir = os.path.join(cli.base_dir, "splits/music_in") #Where to save music
             try:
                 #ensure save dir exists
                 os.makedirs(music_dir, exist_ok=True)
@@ -65,10 +65,10 @@ def home():
             
     search_query = request.args.get("search")
     if search_query:
-        logging.info("Attempting to connect to Spotipy...")
-        sp.connectToSpotipy()  # Connect
+        # logging.info("Attempting to connect to Spotipy...")
+        # cli.connectToSpotipy()  # Connect
         logging.info("Fetching tracks...")
-        tracks = sp.loadSampleSong(search_query)  # Returns top 3 results
+        tracks = cli.loadSampleSong(search_query)  # Returns top 3 results
         
     # Render the template with updated song list
     return render_template("home.html", tracks=tracks, songs=songs)
@@ -99,6 +99,10 @@ def results_page():
 
     # Render the template with the paths to the audio files
     return render_template("results.html", vocals_file=vocals_file, accompaniment_file=accompaniment_file)
+
+@app.route('/music_in/<path:filename>')
+def serve_music_in(filename):
+    return send_from_directory(MUSIC_IN_DIR, filename)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
