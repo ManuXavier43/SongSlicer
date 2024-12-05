@@ -4,6 +4,7 @@ from splits.test import split_vocals_instrumentals
 import os, time
 import re
 import requests
+from visualisation.test import generate_waveform
 
 # Create a Flask application
 app = Flask(__name__, static_folder="static", static_url_path="/static")
@@ -102,8 +103,15 @@ def results_page():
 
 @app.route('/vocal_graphs', methods=['POST'])
 def handle_vocal_graph_request():
+    filename = request.form.get('filename')
+    if not filename:
+        return "Error: No filename provided.", 400
+    logging.info(f"Received request to generate vocal graph for {filename}")
+    # Extract the sanitized song name from the filename
     # Handle the form submission logic here
-    return "Vocal graph processing initiated!", 200
+    fig = generate_waveform(filename)
+    graph_html = fig.to_html(full_html=False)
+    return render_template('waveform.html', graph_html=graph_html)
 
 @app.route('/acc_graphs', methods=['POST'])
 def handle_acc_graph_request():
