@@ -15,11 +15,11 @@ def split_vocals_instrumentals(music_in_dir, music_out_dir, song_name):
     # Create the output directory for the song in music_out
     os.makedirs(temp_output_dir, exist_ok=True)
 
-    # Initialize Spleeter with the 2-stem model (vocals and accompaniment)
-    separator = Separator('spleeter:2stems')
+    # Initialize Spleeter with the 4-stem model (vocals, drums, bass, and other)
+    separator = Separator('spleeter:5stems', MWF=True)
 
     try:
-        # Split the input file into vocals and accompaniment using Spleeter
+        # Split the input file into vocals, drums, bass, and other using Spleeter
         separator.separate_to_file(input_file_path, temp_output_dir)
 
         # After splitting, move the generated files to flatten the structure

@@ -139,19 +139,63 @@
     <h1>Split Results for {{ request.args.get('song') }}</h1>
     
     <h2>Vocals</h2>
-    <audio controls>
+    <audio id="vocals-player" controls>
         <source src="{{ url_for('static', filename=vocals_file) }}" type="audio/wav">
         Your browser does not support the audio element.
     </audio>
 
-    <h2>Accompaniment</h2>
-    <audio controls>
-        <source src="{{ url_for('static', filename=accompaniment_file) }}" type="audio/wav">
+    <h2>Drums</h2>
+    <audio id="drums-player" controls>
+        <source src="{{ url_for('static', filename=drums_file) }}" type="audio/wav">
+        Your browser does not support the audio element.
+    </audio>
+
+    <h2>Bass</h2>
+    <audio id="bass-player" controls>
+        <source src="{{ url_for('static', filename=bass_file) }}" type="audio/wav">
+        Your browser does not support the audio element.
+    </audio>
+
+    <h2>Other</h2>
+    <audio id="other-player" controls>
+        <source src="{{ url_for('static', filename=other_file) }}" type="audio/wav">
+        Your browser does not support the audio element.
+    </audio>
+
+    <h2>Piano</h2>
+    <audio id="piano-player" controls>
+        <source src="{{ url_for('static', filename=piano_file) }}" type="audio/wav">
         Your browser does not support the audio element.
     </audio>
 
     <br>
+    <div style="margin-top: 20px;">
+        <button onclick="playAll()">Play All</button>
+        <button onclick="pauseAll()">Pause All</button>
+    </div>
+
+    <br>
     <a href="{{ url_for('home') }}">Back to Home</a>
+
+    <script>
+        // Function to play all audio players simultaneously
+        function playAll() {
+            document.getElementById('vocals-player').play();
+            document.getElementById('drums-player').play();
+            document.getElementById('bass-player').play();
+            document.getElementById('other-player').play()
+            document.getElementById('piano-player').play();
+        }
+
+        // Function to pause all audio players simultaneously
+        function pauseAll() {
+            document.getElementById('vocals-player').pause();
+            document.getElementById('drums-player').pause();
+            document.getElementById('bass-player').pause();
+            document.getElementById('other-player').pause();
+            document.getElementById('piano-player').pause();
+        }
+    </script>
 </body>
 </html>
 <!--        <!DocType html>
