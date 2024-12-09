@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SONG-SLICER - Results</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
     <style>
         body {
@@ -143,21 +144,49 @@
         <source src="{{ url_for('static', filename=vocals_file) }}" type="audio/wav">
         Your browser does not support the audio element.
     </audio>
-    <form class="search-bar" method="post" action="/vocal_graphs">
-        <input type="hidden" name="filename" value="{{ vocals_file }}">
-        <button type="submit">Graph</button>
-    </form>
+    <button id="vocal-graph-btn" data-file="{{ vocals_file }}">Graph</button>
+    <div id="vocal-waveform-container"></div>
 
     <h2>Accompaniment</h2>
     <audio controls>
         <source src="{{ url_for('static', filename=accompaniment_file) }}" type="audio/wav">
         Your browser does not support the audio element.
     </audio>
-    <form class="search-bar" method="post" action="/acc_graphs">
-        <button type="submit">Graph</button>
-    </form>
+    <button id="accompaniment-graph-btn" data-file="{{ accompaniment_file }}">Graph</button>
+    <div id="accompaniment-waveform-container"></div>
     <br>
     <a href="{{ url_for('home') }}">Back to Home</a>
+    <script>
+        document.getElementById('vocal-graph-btn').addEventListener('click', function() {
+            const filename = this.getAttribute('data-file');
+            fetch('/vocal_graphs', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ filename })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const graphContainer = document.getElementById('vocal-waveform-container');
+                const graphData = JSON.parse(data.graph);
+                Plotly.react(graphContainer, graphData.data, graphData.layout);
+            });
+        });
+
+        document.getElementById('accompaniment-graph-btn').addEventListener('click', function() {
+            const filename = this.getAttribute('data-file');
+            fetch('/accompaniment_graphs', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ filename })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const graphContainer = document.getElementById('accompaniment-waveform-container');
+                const graphData = JSON.parse(data.graph);
+                Plotly.react(graphContainer, graphData.data, graphData.layout);
+            });
+        });
+    </script>
 </body>
 </html>
 <!--        <!DocType html>

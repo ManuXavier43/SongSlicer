@@ -1,6 +1,7 @@
 import wave as wv  # To open wav files
 import numpy as np  # To analyze audio bits
 import plotly.graph_objects as go  # To plot a frequency graph
+from flask import jsonify #handle graph as json
 
 def generate_waveform(sanitized_song_name):
     vocals_file = f"/app/src/static/{sanitized_song_name}"
@@ -39,4 +40,5 @@ def generate_waveform(sanitized_song_name):
 
     # Display the plot
     fig.show()
-    return fig
+    fig_json = fig.to_json()
+    return fig_json

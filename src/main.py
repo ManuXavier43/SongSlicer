@@ -5,6 +5,7 @@ import os, time
 import re
 import requests
 from visualisation.test import generate_waveform
+from flask import jsonify
 
 # Create a Flask application
 app = Flask(__name__, static_folder="static", static_url_path="/static")
@@ -103,20 +104,29 @@ def results_page():
 
 @app.route('/vocal_graphs', methods=['POST'])
 def handle_vocal_graph_request():
-    filename = request.form.get('filename')
+    filename = request.json.get('filename')  # Fetch JSON data from request
     if not filename:
-        return "Error: No filename provided.", 400
-    logging.info(f"Received request to generate vocal graph for {filename}")
-    # Extract the sanitized song name from the filename
-    # Handle the form submission logic here
-    fig = generate_waveform(filename)
-    graph_html = fig.to_html(full_html=False)
-    return render_template('waveform.html', graph_html=graph_html)
+        return jsonify({'error': 'No filename provided'}), 400
 
-@app.route('/acc_graphs', methods=['POST'])
+    logging.info(f"Received request to generate vocal graph for {filename}")
+    
+    # Generate the waveform
+    graph_json = generate_waveform(filename)
+    
+    return jsonify({'graph': graph_json})  # Return JSON response
+
+@app.route('/accompaniment_graphs', methods=['POST'])
 def handle_acc_graph_request():
-    # Handle the form submission logic here
-    return " Accompanient graph processing initiated!", 200
+    filename = request.json.get('filename')  # Fetch JSON data from request
+    if not filename:
+        return jsonify({'error': 'No filename provided'}), 400
+
+    logging.info(f"Received request to generate accompaniment graph for {filename}")
+    
+    # Generate the waveform
+    graph_json = generate_waveform(filename)
+    
+    return jsonify({'graph': graph_json})  # Return JSON response
 
 @app.route('/music_in/<path:filename>')
 def serve_music_in(filename):

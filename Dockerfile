@@ -8,7 +8,6 @@ RUN mkdir -p /app/src/deezer/music_in
 
 # Install system dependencies for tkinter
 RUN apt-get update && apt-get install -y \
-    tk \
     ffmpeg \
     libsndfile1 \
     && apt-get clean \
