@@ -1,44 +1,84 @@
-import wave as wv  # To open wav files
-import numpy as np  # To analyze audio bits
-import plotly.graph_objects as go  # To plot a frequency graph
-from flask import jsonify #handle graph as json
+import wave as wv
+import numpy as np
+import plotly.graph_objects as go
+import json
+from scipy.signal import resample
 
-def generate_waveform(sanitized_song_name):
+def generate_waveform_with_slider(sanitized_song_name):
+    print("Starting waveform generation...")
     vocals_file = f"/app/src/static/{sanitized_song_name}"
-    
+    print(f"Processing file: {vocals_file}")
+
     # Open the audio file
-    song = wv.open(vocals_file, 'rb')
-    freq = song.getframerate()  # Get the frequency of the audio
-    samples = song.getnframes()  # Number of samples
-    t = samples / freq  # Time duration in seconds
-    nchannels = song.getnchannels()
+    try:
+        song = wv.open(vocals_file, 'rb')
+        freq = song.getframerate()  # Original sampling frequency
+        samples = song.getnframes()  # Number of original samples
+        t = samples / freq  # Duration in seconds
+        signal = np.frombuffer(song.readframes(samples), dtype=np.int16)
+        song.close()
+        print(f"Audio file loaded successfully: {samples} samples, {freq} Hz, {t:.2f} seconds.")
+    except Exception as e:
+        print(f"Error loading audio file: {e}")
+        return None
 
-    print(
-        f"Frequency: {freq} Hz",
-        f"Samples: {samples}",
-        f"Time: {t} seconds",
-        f"Number channels: {nchannels}",
-        sep='\n'
-    )
+    # Downsample for faster rendering if necessary
+    print("Starting downsampling...")
+    max_points = 5000
+    step = max(1, len(signal) // max_points)
+    signal = signal[::step]
+    samples = len(signal)
+    freq = freq / step  # Adjust frequency
+    t = samples / freq  # Update duration
+    print(f"Downsampling complete: {samples} samples at {freq:.2f} Hz.")
 
-    # Read signal and convert to numpy array
-    signal = np.frombuffer(song.readframes(samples), dtype=np.int16)
-    song.close()
+    # Create traces and slider steps
+    print("Generating traces and slider steps...")
+    traces = []
+    sliders_steps = []
 
-    # Generate time axis
-    time_axis = np.linspace(0, t, num=samples)
+    for sample_rate in range(1, 6):  # Sample rates from 1 to 5
+        print(f"Generating trace for sample rate {sample_rate}...")
+        resampled_signal = resample(signal, int(samples * sample_rate / freq))
+        time_axis = np.linspace(0, t, num=len(resampled_signal))
 
-    # Plot the waveform
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(x=time_axis, y=signal, mode='lines', name='Waveform'))
-    fig.update_layout(
-        title="Waveform",
+        # Create a trace for each sample rate
+        traces.append(
+            go.Scatter(
+                x=time_axis,
+                y=resampled_signal,
+                visible=(sample_rate == 1),  # Show only the first trace initially
+                name=f"Rate {sample_rate}",
+            )
+        )
+
+        # Define the slider step
+        sliders_steps.append({
+            "args": [{"visible": [i == (sample_rate - 1) for i in range(5)]}],
+            "label": str(sample_rate),
+            "method": "update",
+        })
+
+    print("Traces and slider steps generated.")
+
+    # Create layout with a slider
+    print("Creating layout with slider...")
+    layout = go.Layout(
+        title="Waveform with Sample Rate Slider",
         xaxis_title="Time (s)",
         yaxis_title="Amplitude",
-        template="plotly_white"
+        sliders=[{
+            "active": 0,
+            "currentvalue": {"prefix": "Sample Rate: "},
+            "steps": sliders_steps,
+        }]
     )
 
-    # Display the plot
-    fig.show()
-    fig_json = fig.to_json()
+    # Generate figure
+    print("Generating final figure...")
+    fig = go.Figure(data=traces, layout=layout)
+    fig_json = json.loads(fig.to_json())
+    print("Waveform generation complete. JSON output below:")
+    print(json.dumps(fig_json, indent=2))  # Print the JSON for debugging
+
     return fig_json

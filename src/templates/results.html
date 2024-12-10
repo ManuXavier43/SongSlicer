@@ -157,8 +157,9 @@
     <br>
     <a href="{{ url_for('home') }}">Back to Home</a>
     <script>
-        document.getElementById('vocal-graph-btn').addEventListener('click', function() {
-            const filename = this.getAttribute('data-file');
+        document.getElementById('vocal-graph-btn').addEventListener('click', function () {
+            const filename = this.getAttribute('data-file'); // Get the filename
+
             fetch('/vocal_graphs', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -166,10 +167,11 @@
             })
             .then(response => response.json())
             .then(data => {
+                const graphData = data.graph; // Use graph data directly
                 const graphContainer = document.getElementById('vocal-waveform-container');
-                const graphData = JSON.parse(data.graph);
-                Plotly.react(graphContainer, graphData.data, graphData.layout);
-            });
+                Plotly.react(graphContainer, graphData.data, graphData.layout); // Render graph
+            })
+            .catch(error => console.error('Error:', error));
         });
 
         document.getElementById('accompaniment-graph-btn').addEventListener('click', function() {
