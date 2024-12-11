@@ -158,18 +158,18 @@
     <a href="{{ url_for('home') }}">Back to Home</a>
     <script>
         document.getElementById('vocal-graph-btn').addEventListener('click', function () {
-            const filename = this.getAttribute('data-file'); // Get the filename
+            const filename = this.getAttribute('data-file'); //Pass accompanient file
 
             fetch('/vocal_graphs', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ filename })
+                body: JSON.stringify({ filename }) //Post filename
             })
             .then(response => response.json())
             .then(data => {
-                const graphData = data.graph; // Use graph data directly
+                const graphData = data.graph; //Graph data for vocal waveform container graph
                 const graphContainer = document.getElementById('vocal-waveform-container');
-                Plotly.react(graphContainer, graphData.data, graphData.layout); // Render graph
+                Plotly.react(graphContainer, graphData.data, graphData.layout); //Generate a graph using plotly library
             })
             .catch(error => console.error('Error:', error));
         });
@@ -183,8 +183,8 @@
             })
             .then(response => response.json())
             .then(data => {
+                const graphData = data.graph;
                 const graphContainer = document.getElementById('accompaniment-waveform-container');
-                const graphData = JSON.parse(data.graph);
                 Plotly.react(graphContainer, graphData.data, graphData.layout);
             });
         });

@@ -112,7 +112,6 @@ def handle_vocal_graph_request():
         return jsonify({'error': 'No filename provided'}), 400
 
     try:
-        # Generate graph
         graph_json = generate_waveform_with_slider(filename)
         app.logger.info(f"Generated graph JSON: {graph_json}")
         return jsonify({'graph': graph_json})
@@ -123,17 +122,21 @@ def handle_vocal_graph_request():
 
 @app.route('/accompaniment_graphs', methods=['POST'])
 def handle_acc_graph_request():
-    filename = request.json.get('filename')  # Fetch JSON data from request
+    data = request.get_json()
+    app.logger.info(f"Received request data: {data}")
+    filename = data.get('filename')
     if not filename:
+        app.logger.error('No filename provided')
         return jsonify({'error': 'No filename provided'}), 400
 
-    logging.info(f"Received request to generate accompaniment graph for {filename}")
+    try:
+        graph_json = generate_waveform_with_slider(filename)
+        app.logger.info(f"Generated graph JSON: {graph_json}")
+        return jsonify({'graph': graph_json})
+    except Exception as e:
+        app.logger.error(f"Error generating graph: {e}")
+        return jsonify({'error': str(e)}), 500
     
-    # Generate the waveform
-    graph_json = generate_waveform_with_slider(filename)
-    
-    return jsonify({'graph': graph_json})  # Return JSON response
-
 @app.route('/music_in/<path:filename>')
 def serve_music_in(filename):
     return send_from_directory(MUSIC_IN_DIR, filename)

@@ -24,13 +24,11 @@ def generate_waveform_with_slider(sanitized_song_name):
 
     # Downsample for faster rendering if necessary
     print("Starting downsampling...")
-    max_points = 5000
+    max_points = 2000
     step = max(1, len(signal) // max_points)
-    signal = signal[::step]
+    signal = signal[::step]  # Reduce the number of samples
     samples = len(signal)
-    freq = freq / step  # Adjust frequency
-    t = samples / freq  # Update duration
-    print(f"Downsampling complete: {samples} samples at {freq:.2f} Hz.")
+    print(f"Downsampling complete: {samples} samples, original duration: {t:.2f} seconds.")
 
     # Create traces and slider steps
     print("Generating traces and slider steps...")
@@ -39,8 +37,11 @@ def generate_waveform_with_slider(sanitized_song_name):
 
     for sample_rate in range(1, 6):  # Sample rates from 1 to 5
         print(f"Generating trace for sample rate {sample_rate}...")
-        resampled_signal = resample(signal, int(samples * sample_rate / freq))
-        time_axis = np.linspace(0, t, num=len(resampled_signal))
+        resampled_signal = resample(signal, int(samples * sample_rate))
+        resampled_samples = len(resampled_signal)
+        
+        # Use the original duration `t` for the time axis
+        time_axis = np.linspace(0, t, num=resampled_samples)
 
         # Create a trace for each sample rate
         traces.append(
@@ -58,6 +59,8 @@ def generate_waveform_with_slider(sanitized_song_name):
             "label": str(sample_rate),
             "method": "update",
         })
+
+        print(f"Trace for sample rate {sample_rate} generated with {resampled_samples} samples.")
 
     print("Traces and slider steps generated.")
 
