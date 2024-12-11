@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SONG-SLICER - Results</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
     <style>
         body {
@@ -139,34 +140,44 @@
     <h1>Split Results for {{ request.args.get('song') }}</h1>
     
     <h2>Vocals</h2>
-    <audio id="vocals-player" controls>
+    <audio controls>
         <source src="{{ url_for('static', filename=vocals_file) }}" type="audio/wav">
         Your browser does not support the audio element.
     </audio>
+    <button id="vocal-graph-btn" data-file="{{ vocals_file }}">Graph</button>
+    <div id="vocal-waveform-container"></div>
 
     <h2>Drums</h2>
     <audio id="drums-player" controls>
         <source src="{{ url_for('static', filename=drums_file) }}" type="audio/wav">
         Your browser does not support the audio element.
     </audio>
+    <button id="drum-graph-btn" data-file="{{ drums_file }}">Graph</button>
+    <div id="drum-waveform-container"></div>
 
     <h2>Bass</h2>
     <audio id="bass-player" controls>
         <source src="{{ url_for('static', filename=bass_file) }}" type="audio/wav">
         Your browser does not support the audio element.
     </audio>
+    <button id="bass-graph-btn" data-file="{{ bass_file }}">Graph</button>
+    <div id="bass-waveform-container"></div>
 
     <h2>Other</h2>
     <audio id="other-player" controls>
         <source src="{{ url_for('static', filename=other_file) }}" type="audio/wav">
         Your browser does not support the audio element.
     </audio>
+    <button id="other-graph-btn" data-file="{{ other_file }}">Graph</button>
+    <div id="other-waveform-container"></div>
 
     <h2>Piano</h2>
     <audio id="piano-player" controls>
         <source src="{{ url_for('static', filename=piano_file) }}" type="audio/wav">
         Your browser does not support the audio element.
     </audio>
+    <button id="piano-graph-btn" data-file="{{ piano_file }}">Graph</button>
+    <div id="piano-waveform-container"></div>
 
     <br>
     <div style="margin-top: 20px;">
@@ -195,6 +206,86 @@
             document.getElementById('other-player').pause();
             document.getElementById('piano-player').pause();
         }
+        document.getElementById('vocal-graph-btn').addEventListener('click', function () {
+            const filename = this.getAttribute('data-file'); //Pass accompanient file
+
+            fetch('/vocal_graphs', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ filename }) //Post filename
+            })
+            .then(response => response.json())
+            .then(data => {
+                const graphData = data.graph; //Graph data for vocal waveform container graph
+                const graphContainer = document.getElementById('vocal-waveform-container');
+                Plotly.react(graphContainer, graphData.data, graphData.layout); //Generate a graph using plotly library
+            })
+            .catch(error => console.error('Error:', error));
+        });
+        document.getElementById('drum-graph-btn').addEventListener('click', function () {
+            const filename = this.getAttribute('data-file');
+
+            fetch('/drum_graphs', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ filename })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const graphData = data.graph;
+                const graphContainer = document.getElementById('drum-waveform-container');
+                Plotly.react(graphContainer, graphData.data, graphData.layout);
+            })
+            .catch(error => console.error('Error:', error));
+        });
+        document.getElementById('bass-graph-btn').addEventListener('click', function () {
+            const filename = this.getAttribute('data-file');
+
+            fetch('/bass_graphs', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ filename })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const graphData = data.graph;
+                const graphContainer = document.getElementById('bass-waveform-container');
+                Plotly.react(graphContainer, graphData.data, graphData.layout);
+            })
+            .catch(error => console.error('Error:', error));
+        });
+        document.getElementById('other-graph-btn').addEventListener('click', function () {
+            const filename = this.getAttribute('data-file');
+
+            fetch('/other_graphs', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ filename })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const graphData = data.graph;
+                const graphContainer = document.getElementById('other-waveform-container');
+                Plotly.react(graphContainer, graphData.data, graphData.layout);
+            })
+            .catch(error => console.error('Error:', error));
+        });
+        document.getElementById('piano-graph-btn').addEventListener('click', function () {
+            const filename = this.getAttribute('data-file');
+
+            fetch('/piano_graphs', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ filename })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const graphData = data.graph;
+                const graphContainer = document.getElementById('piano-waveform-container');
+                Plotly.react(graphContainer, graphData.data, graphData.layout);
+            })
+            .catch(error => console.error('Error:', error));
+        });
     </script>
 </body>
 </html>

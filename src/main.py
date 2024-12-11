@@ -1,10 +1,12 @@
 from flask import Flask, request, render_template, url_for, redirect, send_from_directory
 from src.song_search.test import DeezerClient, logging
 from splits.test import split_vocals_instrumentals  # Import the updated function
+from src.visualisation.test import generate_waveform_with_slider
 import os
 import time
 import re
 import requests
+from flask import jsonify
 
 # Create a Flask application
 app = Flask(__name__, static_folder="static", static_url_path="/static")
@@ -98,6 +100,84 @@ def results_page():
     # Render the template with the paths to the audio files
     return render_template("results.html", vocals_file=vocals_file, drums_file=drums_file,
                            bass_file=bass_file, other_file=other_file, piano_file=piano_file)
+
+@app.route('/vocal_graphs', methods=['POST'])
+def handle_vocal_graph_request():
+    data = request.get_json()
+    app.logger.info(f"Received request data: {data}")
+    filename = data.get('filename')
+    if not filename:
+        app.logger.error('No filename provided')
+        return jsonify({'error': 'No filename provided'}), 400
+
+    try:
+        graph_json = generate_waveform_with_slider(filename)
+        app.logger.info(f"Generated graph JSON: {graph_json}")
+        return jsonify({'graph': graph_json})
+    except Exception as e:
+        app.logger.error(f"Error generating graph: {e}")
+        return jsonify({'error': str(e)}), 500
+@app.route('/drum_graphs', methods=['POST'])
+def handle_drum_graph_request():
+    data = request.get_json()
+    app.logger.info(f"Received request data: {data}")
+    filename = data.get('filename')
+    if not filename:
+        app.logger.error('No filename provided')
+        return jsonify({'error': 'No filename provided'}), 400
+    try:
+        graph_json = generate_waveform_with_slider(filename)
+        app.logger.info(f"Generated graph JSON: {graph_json}")
+        return jsonify({'graph': graph_json})
+    except Exception as e:
+        app.logger.error(f"Error generating graph: {e}")
+        return jsonify({'error': str(e)}), 500
+@app.route('/bass_graphs', methods=['POST'])
+def handle_bass_graph_request():
+    data = request.get_json()
+    app.logger.info(f"Received request data: {data}")
+    filename = data.get('filename')
+    if not filename:
+        app.logger.error('No filename provided')
+        return jsonify({'error': 'No filename provided'}), 400
+    try:
+        graph_json = generate_waveform_with_slider(filename)
+        app.logger.info(f"Generated graph JSON: {graph_json}")
+        return jsonify({'graph': graph_json})
+    except Exception as e:
+        app.logger.error(f"Error generating graph: {e}")
+        return jsonify({'error': str(e)}), 500
+@app.route('/other_graphs', methods=['POST'])
+def handle_other_graph_request():
+    data = request.get_json()
+    app.logger.info(f"Received request data: {data}")
+    filename = data.get('filename')
+    if not filename:
+        app.logger.error('No filename provided')
+        return jsonify({'error': 'No filename provided'}), 400
+    try:
+        graph_json = generate_waveform_with_slider(filename)
+        app.logger.info(f"Generated graph JSON: {graph_json}")
+        return jsonify({'graph': graph_json})
+    except Exception as e:
+        app.logger.error(f"Error generating graph: {e}")
+        return jsonify({'error': str(e)}), 500
+    
+@app.route('/piano_graphs', methods=['POST'])
+def handle_piano_graph_request():
+    data = request.get_json()
+    app.logger.info(f"Received request data: {data}")
+    filename = data.get('filename')
+    if not filename:
+        app.logger.error('No filename provided')
+        return jsonify({'error': 'No filename provided'}), 400
+    try:
+        graph_json = generate_waveform_with_slider(filename)
+        app.logger.info(f"Generated graph JSON: {graph_json}")
+        return jsonify({'graph': graph_json})
+    except Exception as e:
+        app.logger.error(f"Error generating graph: {e}")
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/music_in/<path:filename>')
 def serve_music_in(filename):
