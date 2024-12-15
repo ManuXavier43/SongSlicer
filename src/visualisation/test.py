@@ -34,10 +34,11 @@ def generate_waveform_with_slider(sanitized_song_name):
     print("Generating traces and slider steps...")
     traces = []
     sliders_steps = []
-
-    for sample_rate in range(1, 6):  # Sample rates from 1 to 5
-        print(f"Generating trace for sample rate {sample_rate}...")
-        resampled_signal = resample(signal, int(samples * sample_rate))
+    resolution_levels = [0.1, 0.25, 0.5, 1.0, 2.0]
+    default_res_index = 3
+    for i,res in enumerate(resolution_levels):  # Sample rates from 1 to 5
+        print(f"Generating trace for sample rate {res}...")
+        resampled_signal = resample(signal, int(samples * res))
         resampled_samples = len(resampled_signal)
         
         # Use the original duration `t` for the time axis
@@ -48,19 +49,19 @@ def generate_waveform_with_slider(sanitized_song_name):
             go.Scatter(
                 x=time_axis,
                 y=resampled_signal,
-                visible=(sample_rate == 1),  # Show only the first trace initially
-                name=f"Rate {sample_rate}",
+                visible=(i == default_res_index),  # Show only the first trace initially
+                name=f"Rate {res:.2f}",
             )
         )
 
         # Define the slider step
         sliders_steps.append({
-            "args": [{"visible": [i == (sample_rate - 1) for i in range(5)]}],
-            "label": str(sample_rate),
+            "args": [{"visible": [j == i for j in range(len(resolution_levels))]}],
+            "label": f"{res:.2f}",
             "method": "update",
         })
 
-        print(f"Trace for sample rate {sample_rate} generated with {resampled_samples} samples.")
+        print(f"Trace for resolution {res} generated with {resampled_samples} samples.")
 
     print("Traces and slider steps generated.")
 
@@ -71,8 +72,8 @@ def generate_waveform_with_slider(sanitized_song_name):
         xaxis_title="Time (s)",
         yaxis_title="Amplitude",
         sliders=[{
-            "active": 0,
-            "currentvalue": {"prefix": "Sample Rate: "},
+            "active": default_res_index,
+            "currentvalue": {"prefix": "Graph scale: "},
             "steps": sliders_steps,
         }]
     )
