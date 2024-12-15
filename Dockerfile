@@ -4,7 +4,7 @@ FROM python:3.9-slim
 # Set the working directory inside the container
 WORKDIR /app
 
-RUN mkdir -p /app/src/deezer/music_in
+RUN mkdir -p /app/src/splits/music_in
 
 # Install system dependencies for tkinter
 RUN apt-get update && apt-get install -y \

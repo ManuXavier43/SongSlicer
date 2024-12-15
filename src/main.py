@@ -1,17 +1,21 @@
 from flask import Flask, request, render_template, url_for, redirect, send_from_directory
-from src.spotipy.test import SpotipyClient, logging
-from deezer.test import split_vocals_instrumentals
+from src.song_search.test import DeezerClient, logging
+from splits.test import split_vocals_instrumentals  # Import the updated function
+from src.visualisation.test import generate_waveform_with_slider
 import os
+import time
 import re
+import requests
+from flask import jsonify
 
 # Create a Flask application
 app = Flask(__name__, static_folder="static", static_url_path="/static")
 
-# Spotipy class and dir so we know where to save music
+# Deezer class and dir so we know where to save music
 base_dir = os.path.dirname(os.path.abspath(__file__))
-sp = SpotipyClient(base_dir)
+cli = DeezerClient(base_dir)
 
-MUSIC_IN_DIR = "/app/src/deezer/music_in"
+MUSIC_IN_DIR = "/app/src/splits/music_in"
 MUSIC_OUT_DIR = "/app/src/static/music_out"
 
 @app.route("/", methods=["GET", "POST"])
@@ -30,38 +34,73 @@ def home():
         songs = []  # Handle missing directory by assigning an empty list
 
     if request.method == "POST":
-        # Retrieve song search
-        user_input = request.form.get("user_input")
-        logging.info("Attempting to connect to Spotipy...")
-        sp.connectToSpotipy()  # Connect
+        if "preview_url" in request.form and "name" in request.form:
+            # Get the preview URL from the form
+            preview_url = request.form.get("preview_url")
+            track_name = request.form.get("name")  # Used to write filename
+            music_dir = os.path.join(cli.base_dir, "splits/music_in")  # Where to save music
+            try:
+                # Ensure save dir exists
+                os.makedirs(music_dir, exist_ok=True)
+                # Get song
+                response = requests.get(preview_url)
+                # Unique timestamp per song
+                preview_filename = f"preview_{track_name.replace(' ', '_')}_{int(time.time())}.mp3"
+                # Actual path for preview
+                preview_path = os.path.join(music_dir, preview_filename)
+                logging.debug(f"Absolute path to saved file: {os.path.abspath(preview_path)}")
+                # Save to dir
+                with open(preview_path, "wb") as file:
+                    file.write(response.content)
+                    logging.debug(f"Preview saved to {preview_path}")
+                return redirect(url_for('home'))
+            except Exception as e:
+                logging.debug(f"Connection error fetching preview: {e}")
 
-        result = f"Connected to Spotipy with query: {user_input}"  # Debug HTML
-        logging.info("Writing song...")
-        saved_file, tracks = sp.loadSampleSong(user_input)  # Returns the unique filename
-        file_path = os.path.join(app.static_folder, saved_file)
-        if os.path.exists(file_path) and tracks:  # Try to serve mp3 preview
-            # Generate a URL to serve the file
-            audio_url = url_for("static", filename=saved_file)
-            logging.info(f"Audio file URL: {audio_url}")
-        else:
-            audio_url = None
-            logging.warning(file_path)
-            logging.warning("Audio file not found.")
-
+        else:    
+            # Retrieve song search
+            user_input = request.form.get("user_input")
+            if user_input and user_input.strip():
+                return redirect(url_for('home', search=user_input))
+            return redirect(url_for('home'))
+            
+    search_query = request.args.get("search")
+    if search_query:
+        logging.info("Fetching tracks...")
+        tracks = cli.loadSampleSong(search_query)  # Returns top 3 results
+        
     # Render the template with updated song list
-    return render_template("home.html", audio_url=audio_url, tracks=tracks, songs=songs)
-
+    return render_template("home.html", tracks=tracks, songs=songs)
 @app.route("/edit", methods=["GET", "POST"])
 def edit_page():
-    songs = [f for f in os.listdir(MUSIC_IN_DIR) if os.path.isfile(os.path.join(MUSIC_IN_DIR, f))]
-
     if request.method == "POST":
+        if "file" in request.files:
+            file = request.files["file"]
+
+            if file.filename == "":
+                return "No selected file"
+
+            if file and file.filename.endswith(".mp3"):
+                # Ensure the upload directory exists
+                os.makedirs(MUSIC_IN_DIR, exist_ok=True)
+
+                # Save the file to MUSIC_IN_DIR
+                file_path = os.path.join(MUSIC_IN_DIR, file.filename)
+                file.save(file_path)
+                logging.info(f"File saved to {file_path}")
+
+                # Redirect to edit page
+                return redirect(url_for("edit_page"))
+
+            return "Invalid file format. Only MP3 files are allowed."
+
         selected_song = request.form.get("song")
         if selected_song:
             # Call the function to split the selected song with the correct arguments
             split_vocals_instrumentals(MUSIC_IN_DIR, MUSIC_OUT_DIR, selected_song)
             return redirect(url_for('results_page', song=selected_song))
 
+    songs = [f for f in os.listdir(MUSIC_IN_DIR) if os.path.isfile(os.path.join(MUSIC_IN_DIR, f))]
     return render_template("edit.html", songs=songs)
 
 @app.route("/results")
@@ -71,12 +110,96 @@ def results_page():
 
     # Update paths to match where files are actually saved in the static directory
     vocals_file = f"music_out/{sanitized_song_name}/vocals.wav"
-    accompaniment_file = f"music_out/{sanitized_song_name}/accompaniment.wav"
+    drums_file = f"music_out/{sanitized_song_name}/drums.wav"
+    bass_file = f"music_out/{sanitized_song_name}/bass.wav"
+    other_file = f"music_out/{sanitized_song_name}/other.wav"
+    piano_file = f"music_out/{sanitized_song_name}/piano.wav"
 
     # Render the template with the paths to the audio files
-    return render_template("results.html", vocals_file=vocals_file, accompaniment_file=accompaniment_file)
+    return render_template("results.html", vocals_file=vocals_file, drums_file=drums_file,
+                           bass_file=bass_file, other_file=other_file, piano_file=piano_file)
+
+@app.route('/vocal_graphs', methods=['POST'])
+def handle_vocal_graph_request():
+    data = request.get_json()
+    app.logger.info(f"Received request data: {data}")
+    filename = data.get('filename')
+    if not filename:
+        app.logger.error('No filename provided')
+        return jsonify({'error': 'No filename provided'}), 400
+
+    try:
+        graph_json = generate_waveform_with_slider(filename)
+        app.logger.info(f"Generated graph JSON: {graph_json}")
+        return jsonify({'graph': graph_json})
+    except Exception as e:
+        app.logger.error(f"Error generating graph: {e}")
+        return jsonify({'error': str(e)}), 500
+@app.route('/drum_graphs', methods=['POST'])
+def handle_drum_graph_request():
+    data = request.get_json()
+    app.logger.info(f"Received request data: {data}")
+    filename = data.get('filename')
+    if not filename:
+        app.logger.error('No filename provided')
+        return jsonify({'error': 'No filename provided'}), 400
+    try:
+        graph_json = generate_waveform_with_slider(filename)
+        app.logger.info(f"Generated graph JSON: {graph_json}")
+        return jsonify({'graph': graph_json})
+    except Exception as e:
+        app.logger.error(f"Error generating graph: {e}")
+        return jsonify({'error': str(e)}), 500
+@app.route('/bass_graphs', methods=['POST'])
+def handle_bass_graph_request():
+    data = request.get_json()
+    app.logger.info(f"Received request data: {data}")
+    filename = data.get('filename')
+    if not filename:
+        app.logger.error('No filename provided')
+        return jsonify({'error': 'No filename provided'}), 400
+    try:
+        graph_json = generate_waveform_with_slider(filename)
+        app.logger.info(f"Generated graph JSON: {graph_json}")
+        return jsonify({'graph': graph_json})
+    except Exception as e:
+        app.logger.error(f"Error generating graph: {e}")
+        return jsonify({'error': str(e)}), 500
+@app.route('/other_graphs', methods=['POST'])
+def handle_other_graph_request():
+    data = request.get_json()
+    app.logger.info(f"Received request data: {data}")
+    filename = data.get('filename')
+    if not filename:
+        app.logger.error('No filename provided')
+        return jsonify({'error': 'No filename provided'}), 400
+    try:
+        graph_json = generate_waveform_with_slider(filename)
+        app.logger.info(f"Generated graph JSON: {graph_json}")
+        return jsonify({'graph': graph_json})
+    except Exception as e:
+        app.logger.error(f"Error generating graph: {e}")
+        return jsonify({'error': str(e)}), 500
+    
+@app.route('/piano_graphs', methods=['POST'])
+def handle_piano_graph_request():
+    data = request.get_json()
+    app.logger.info(f"Received request data: {data}")
+    filename = data.get('filename')
+    if not filename:
+        app.logger.error('No filename provided')
+        return jsonify({'error': 'No filename provided'}), 400
+    try:
+        graph_json = generate_waveform_with_slider(filename)
+        app.logger.info(f"Generated graph JSON: {graph_json}")
+        return jsonify({'graph': graph_json})
+    except Exception as e:
+        app.logger.error(f"Error generating graph: {e}")
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/music_in/<path:filename>')
 def serve_music_in(filename):
     return send_from_directory(MUSIC_IN_DIR, filename)
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
