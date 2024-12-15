@@ -68,7 +68,7 @@ def generate_waveform_with_slider(sanitized_song_name):
     # Create layout with a slider
     print("Creating layout with slider...")
     layout = go.Layout(
-        title="Waveform with Sample Rate Slider",
+        title="Waveform with scale slider",
         xaxis_title="Time (s)",
         yaxis_title="Amplitude",
         sliders=[{
