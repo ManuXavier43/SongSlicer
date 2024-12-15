@@ -143,30 +143,46 @@
 </head>
 <body>
     <!-- Header Section -->
-    <header class="header">
-        <h1 class="title">SONG-SLICER - Edit Page</h1>
-    </header>
+    <!-- Header Section -->
+<header class="header">
+    <h1 class="title">SONG-SLICER - Edit Page</h1>
+</header>
 
-    <!-- Main Content -->
-    <main class="edit-container">
-        <div class="form-container">
-            <form action="/edit" method="POST">
-                <label for="song">Select a Song:</label>
-                <select name="song" id="song">
-                    {% for song in songs %}
-                        <option value="{{ song }}">{{ song }}</option>
-                    {% endfor %}
-                </select>
-                <button type="submit">Split Song</button>
-            </form>
-        </div>
+<!-- Main Content -->
+<main class="edit-container">
+    <!-- Form to Split a Song -->
+    <div class="form-container">
+        <form action="/edit" method="POST">
+            <label for="song">Select a Song:</label>
+            <select name="song" id="song">
+                {% for song in songs %}
+                    <option value="{{ song }}">{{ song }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Split Song</button>
+        </form>
+    </div>
 
-        <!-- Additional Actions
-        <div class="actions">
-            <button class="action-btn save">Save</button>
-            <button class="action-btn edit">Edit</button>
-        </div> -->
-    </main>
+    <!-- Upload New MP3 -->
+    <div class="form-container">
+        <form action="{{ url_for('edit_page') }}" method="POST" enctype="multipart/form-data">
+            <label for="file">Upload New MP3:</label>
+            <input type="file" name="file" id="file" accept=".mp3" required>
+            <button type="submit">Upload</button>
+        </form>
+    </div>
+
+    <!-- List of Uploaded Songs -->
+    <div class="uploaded-songs">
+        <h2>Available Songs</h2>
+        <ul>
+            {% for song in songs %}
+                <li>{{ song }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</main>
+
 
     <!-- Footer Controls -->
      <!--  <footer class="controls"></footer>

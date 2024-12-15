@@ -140,7 +140,7 @@
     <h1>Split Results for {{ request.args.get('song') }}</h1>
     
     <h2>Vocals</h2>
-    <audio controls>
+    <audio id="vocals-player" controls>
         <source src="{{ url_for('static', filename=vocals_file) }}" type="audio/wav">
         Your browser does not support the audio element.
     </audio>
@@ -194,7 +194,7 @@
             document.getElementById('vocals-player').play();
             document.getElementById('drums-player').play();
             document.getElementById('bass-player').play();
-            document.getElementById('other-player').play()
+            document.getElementById('other-player').play();
             document.getElementById('piano-player').play();
         }
 

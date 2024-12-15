@@ -71,18 +71,36 @@ def home():
         
     # Render the template with updated song list
     return render_template("home.html", tracks=tracks, songs=songs)
-
 @app.route("/edit", methods=["GET", "POST"])
 def edit_page():
-    songs = [f for f in os.listdir(MUSIC_IN_DIR) if os.path.isfile(os.path.join(MUSIC_IN_DIR, f))]
-
     if request.method == "POST":
+        if "file" in request.files:
+            file = request.files["file"]
+
+            if file.filename == "":
+                return "No selected file"
+
+            if file and file.filename.endswith(".mp3"):
+                # Ensure the upload directory exists
+                os.makedirs(MUSIC_IN_DIR, exist_ok=True)
+
+                # Save the file to MUSIC_IN_DIR
+                file_path = os.path.join(MUSIC_IN_DIR, file.filename)
+                file.save(file_path)
+                logging.info(f"File saved to {file_path}")
+
+                # Redirect to edit page
+                return redirect(url_for("edit_page"))
+
+            return "Invalid file format. Only MP3 files are allowed."
+
         selected_song = request.form.get("song")
         if selected_song:
             # Call the function to split the selected song with the correct arguments
             split_vocals_instrumentals(MUSIC_IN_DIR, MUSIC_OUT_DIR, selected_song)
             return redirect(url_for('results_page', song=selected_song))
 
+    songs = [f for f in os.listdir(MUSIC_IN_DIR) if os.path.isfile(os.path.join(MUSIC_IN_DIR, f))]
     return render_template("edit.html", songs=songs)
 
 @app.route("/results")
