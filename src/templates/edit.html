@@ -80,10 +80,17 @@
             color: #fff;
             transition: background-color 0.3s ease;
         }
-
-        .form-container button:hover {
+        .form-container button:hover:not(:disabled) {
             background-color: #e6952a;
         }
+       
+
+        .form-container button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        
 
         /* Actions and Song Controls */
         .actions {
@@ -107,6 +114,27 @@
 
         .edit {
             background-color: #e91e63;
+        }
+        .uploaded-songs {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            width: 60%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .uploaded-songs h2 {
+            margin-bottom: 10px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
         }
 
         /* Footer Controls */
@@ -152,14 +180,14 @@
 <main class="edit-container">
     <!-- Form to Split a Song -->
     <div class="form-container">
-        <form action="/edit" method="POST">
+        <form action="/edit" method="POST" onsubmit="disableButton()">
             <label for="song">Select a Song:</label>
             <select name="song" id="song">
                 {% for song in songs %}
                     <option value="{{ song }}">{{ song }}</option>
                 {% endfor %}
             </select>
-            <button type="submit">Split Song</button>
+            <button type="submit" id="split-button">Split Song</button>
         </form>
     </div>
 
@@ -183,6 +211,13 @@
     </div>
 </main>
 
+<script>
+      function disableButton() {
+        const splitButton = document.getElementById('split-button');
+        splitButton.disabled = true;
+        splitButton.textContent = "Splitting...dont refresh";
+        }
+</script>
 
     <!-- Footer Controls -->
      <!--  <footer class="controls"></footer>
