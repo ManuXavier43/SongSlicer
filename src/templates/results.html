@@ -89,7 +89,7 @@
 
     .waveform-container {
         width: 100%;
-        height: 200px;
+        height: 15px;
         margin-top: 10px;
         margin-bottom: 20px;
     }
@@ -180,7 +180,7 @@
             <button onclick="playAll()" class="btn btn-primary">Play All</button>
             <button onclick="pauseAll()" class="btn btn-primary">Pause All</button>
         </div>
-            <div class="col-md-4">
+            <div class="col-md-12">
                 <div class="audio-card" id="vocals-card">
                     <h2>Vocals</h2>
                     <div class="audio-controls">
@@ -194,7 +194,7 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-12">
                 <div class="audio-card" id="drums-card">
                     <h2>Drums</h2>
                     <div class="audio-controls">
@@ -208,7 +208,7 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-12">
                 <div class="audio-card" id="bass-card">
                     <h2>Bass</h2>
                     <div class="audio-controls">
@@ -221,7 +221,7 @@
                     <div id="bass-waveform-container" class="waveform-container"></div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-12">
                         <div class="audio-card" id="piano-card">
                             <h2>Piano</h2>
                             <div class="audio-controls">
@@ -235,7 +235,7 @@
                     </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-12">
                 <div class="audio-card" id="other-card">
                     <h2>Extras</h2>
                     <div class="audio-controls">
@@ -271,8 +271,10 @@
             document.getElementById('piano-player').pause();
         }
         document.getElementById('vocal-graph-btn').addEventListener('click', function () {
+            but = document.getElementById('vocal-graph-btn');
             const filename = this.getAttribute('data-file'); //Pass accompanient file
-
+            const parentCard = but.closest('.audio-card'); // Find closest parent with the 'audio-card' class
+            const graphContainer = parentCard.querySelector('.waveform-container'); // Select the container inside the card
             fetch('/vocal_graphs', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -282,11 +284,13 @@
             .then(data => {
                 const graphData = data.graph; //Graph data for vocal waveform container graph
                 const graphContainer = document.getElementById('vocal-waveform-container');
+                graphContainer.style.height = "400px";
                 Plotly.react(graphContainer, graphData.data, graphData.layout); //Generate a graph using plotly library
             })
             .catch(error => console.error('Error:', error));
         });
         document.getElementById('drum-graph-btn').addEventListener('click', function () {
+            but = document.getElementById('drum-graph-btn');
             const filename = this.getAttribute('data-file');
 
             fetch('/drum_graphs', {
@@ -298,11 +302,13 @@
             .then(data => {
                 const graphData = data.graph;
                 const graphContainer = document.getElementById('drum-waveform-container');
+                graphContainer.style.height = "400px";
                 Plotly.react(graphContainer, graphData.data, graphData.layout);
             })
             .catch(error => console.error('Error:', error));
         });
         document.getElementById('bass-graph-btn').addEventListener('click', function () {
+            but = document.getElementById('bass-graph-btn');
             const filename = this.getAttribute('data-file');
 
             fetch('/bass_graphs', {
@@ -314,11 +320,13 @@
             .then(data => {
                 const graphData = data.graph;
                 const graphContainer = document.getElementById('bass-waveform-container');
+                graphContainer.style.height = "400px";
                 Plotly.react(graphContainer, graphData.data, graphData.layout);
             })
             .catch(error => console.error('Error:', error));
         });
         document.getElementById('other-graph-btn').addEventListener('click', function () {
+            but = document.getElementById('other-graph-btn');
             const filename = this.getAttribute('data-file');
 
             fetch('/other_graphs', {
@@ -330,11 +338,13 @@
             .then(data => {
                 const graphData = data.graph;
                 const graphContainer = document.getElementById('other-waveform-container');
+                graphContainer.style.height = "400px";
                 Plotly.react(graphContainer, graphData.data, graphData.layout);
             })
             .catch(error => console.error('Error:', error));
         });
         document.getElementById('piano-graph-btn').addEventListener('click', function () {
+            but = document.getElementById('piano-graph-btn');
             const filename = this.getAttribute('data-file');
 
             fetch('/piano_graphs', {
@@ -346,6 +356,7 @@
             .then(data => {
                 const graphData = data.graph;
                 const graphContainer = document.getElementById('piano-waveform-container');
+                graphContainer.style.height = "400px";
                 Plotly.react(graphContainer, graphData.data, graphData.layout);
             })
             .catch(error => console.error('Error:', error));

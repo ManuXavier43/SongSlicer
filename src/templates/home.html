@@ -78,10 +78,10 @@
             color: #fff;
             border: none;
             border-radius: 5px;
-            margin-left: 10px;
             transition: background-color 0.3s ease;
             max-width: 100%; /* Ensures button stays within the container */
             white-space: nowrap; /* Prevents text wrapping */
+            align-self: flex-end;
         }
 
         .btn-custom-split:hover {
@@ -108,7 +108,30 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            min-width: 300px;
+            min-width: 500px;  /* Ensures the container never gets smaller than 300px */
+            width: 100%;       /* Ensures the container takes up full available space */
+            max-width: 1000px;  /* You can adjust this to a suitable maximum width */
+        }
+
+        .recently-edited ul, .top-songs ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .recently-edited li, .top-songs li {
+            display: flex; /* Use flexbox for audio player and button */
+            justify-content: space-between; /* Space between the audio player and button */
+            align-items: center; /* Align items vertically */
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .recently-edited audio, .top-songs audio {
+            flex-grow: 1; /* Allow audio player to grow and take available space */
+            margin-right: 20px; /* Add space between the audio player and the button */
         }
 
         h2 {
@@ -171,7 +194,7 @@
 
     <!-- Content -->
     <div class="content">
-        <!-- Recently Edited Songs -->
+        <!-- Recently Edited Songs
         <div class="recently-edited">
             <h2>Recently Edited Songs:</h2>
             <ul>
@@ -195,6 +218,34 @@
                 </li>
                 {% endfor %}
             </ul>            
+        </div> -->
+        <!-- Recently Edited Songs -->
+        <div class="recently-edited">
+            <h2>Recently Edited Songs:</h2>
+            <ul>
+                {% for song in songs %}
+                <li class="mb-3">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <strong>
+                                {{ song.split('_')[1:-1] | join(' ') | replace('.mp3', '') }}
+                            </strong>
+
+                            <audio controls class="mt-2">
+                                <source src="{{ url_for('serve_music_in', filename=song) }}" type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center justify-content-end">
+                            <form action="{{ url_for('edit_page') }}" method="post">
+                                <input type="hidden" name="song_name" value="{{ song }}">
+                                <button class="btn btn-sm btn-custom-split" type="submit">Split Song</button>
+                            </form>
+                        </div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
         </div>
 
         <!-- Top Songs -->
