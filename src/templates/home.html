@@ -81,7 +81,8 @@
             transition: background-color 0.3s ease;
             max-width: 100%; /* Ensures button stays within the container */
             white-space: nowrap; /* Prevents text wrapping */
-            align-self: flex-end;
+            /* align-self: flex-end; */
+            margin-right: 10px;
         }
 
         .btn-custom-split:hover {
@@ -97,7 +98,7 @@
             gap: 30px;
             flex-wrap: wrap;
             padding: 20px;
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
             flex: 1;
         }
@@ -110,13 +111,12 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             min-width: 500px;  /* Ensures the container never gets smaller than 300px */
             width: 100%;       /* Ensures the container takes up full available space */
-            max-width: 1300px;  /* You can adjust this to a suitable maximum width */
+            max-width: 1000px;  /* You can adjust this to a suitable maximum width */
         }
 
         .recently-edited ul, .top-songs ul {
             list-style: none;
             padding: 0;
-            margin: 0;
         }
 
         .recently-edited li, .top-songs li {
@@ -128,16 +128,20 @@
             background: #fff;
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            width: 100%; 
         }
 
-        .recently-edited audio, .top-songs audio {
-            width: 250px;
-            flex-shrink: 0; 
-            margin-right: 20px; /* Add space between the audio player and the button */
+        .recently-edited audio {
+            margin-right: 10px; /* Reduce space between audio player and button */
+            width: 350px; /* Set a reasonable width for the audio player */
+            height: 40px; /* Keep height consistent with the button */
+            margin-bottom: 10px;
         }
-        
-
+        .top-songs audio {
+            margin-right: 10px; /* Reduce space between audio player and button */
+            width: 250px; /* Set a reasonable width for the audio player */
+            height: 40px; /* Keep height consistent with the button */
+            margin-bottom: 10px;
+        }
         h2 {
             font-size: 1.5rem;
             margin-bottom: 15px;
@@ -179,6 +183,25 @@
         footer p {
             margin: 0;
         }
+        .col-md-4 {
+            display: flex;
+            justify-content: flex-end; /* Align button to the right */
+            align-items: center; /* Vertically center button */
+        }
+        .col-md-8 {
+            display: flex;
+            flex-direction: column; /* Stack text and audio vertically */
+            justify-content: center; /* Vertically center content */
+            width: 100%; /* Take full column space */
+        }
+
+        .col-md-8 strong {
+            display: block;
+            margin-bottom: 5px; /* Add some space below the song name */
+            white-space: nowrap; /* Prevent text wrapping */
+            overflow: hidden; /* Hide overflow text */
+            text-overflow: ellipsis; /* Add ellipsis for long text */
+        }
     </style>
 </head>
 <body>
@@ -198,6 +221,31 @@
 
     <!-- Content -->
     <div class="content">
+        <!-- Recently Edited Songs
+        <div class="recently-edited">
+            <h2>Recently Edited Songs:</h2>
+            <ul>
+                {% for song in songs %}
+                <li class="mb-3">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <strong>{{ song }}</strong>
+                            <audio controls class="mt-2">
+                                <source src="{{ url_for('serve_music_in', filename=song) }}" type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center justify-content-end">
+                            <form action="{{ url_for('edit_page') }}" method="post">
+                                <input type="hidden" name="song_name" value="{{ song }}">
+                                <button class="btn btn-sm btn-custom-split" type="submit">Split Song</button>
+                            </form>
+                        </div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>            
+        </div> -->
         <!-- Recently Edited Songs -->
         <div class="recently-edited">
             <h2>Recently Edited Songs:</h2>
@@ -245,7 +293,7 @@
                                 {% if track.album_image %}
                                 <img src="{{ track.album_image }}" alt="Album Cover" class="ms-2 rounded" style="width: 70px;">
                                 {% endif %}
-                                <form method="POST" action="/" class="d-flex justify-content-end mt-2">
+                                <form method="POST" action="/" class="d-flex justify-content-end mt-2 me-3">
                                     <input type="hidden" name="name" value="{{ track.name }}">
                                     <input type="hidden" name="preview_url" value="{{ track.preview_url }}">
                                     <button class="btn btn-sm btn-custom-split" type="submit">Save Song</button>
