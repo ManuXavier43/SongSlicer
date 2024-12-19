@@ -5,188 +5,252 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SONG-SLICER - Results</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Optional Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #8d63ff;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-        }
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #171717;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column; /* Align everything vertically */
+        min-height: 100%; /* Ensure the body takes at least full viewport height */
+    }
+
+    /* Header Styling */
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #3b3b3b;
+        padding: 15px 20px;
+        color: white;
+    }
+
+    .title {
+        font-size: 2rem;
+        font-weight: bold;
+        text-align: center;
+        flex-grow: 1;
+    }
+
+    .profile img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+    .container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 20px;
+    }
+    /* Content Styling */
+    /* .container {
+        max-width: 1200px;
+        margin: 0 auto;
+    } */
+
+    .audio-card {
+        background: #F1F3F4;
+        border-radius: 15px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+        padding: 20px;
+        width: 100%;
+        max-width: 1000px;
         
-        .header {
-            display: flex; /* Flex layout for horizontal alignment */
-            align-items: center; /* Center items vertically */
-            justify-content: space-between; /* Space out items (logo/title on left, profile on right) */
-            background-color: rgb(0, 0, 0);
-            padding: 20px;
+    }
+
+    .audio-card h2 {
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+    }
+    .audio-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .audio-controls audio {
+        flex-grow: 1;              /* Allow the audio player to grow and take available space */
+        margin-right: 10px;        /* Add space between the audio player and button */
+    }
+    .audio-card button {
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+
+    .waveform-container {
+        width: 100%;
+        height: 15px;
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+
+    .play-controls {
+        display: flex;
+        align-items: flex-start; /* Align buttons to the left */
+        margin-top: 20px;
+        margin-bottom: 30px;
+        margin-left: -90px;
+        gap: 10px; /* Add space between the buttons */
+    }
+    .play-controls button {
+    padding: 10px 20px;
+    background-color: #789FCC;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.play-controls button:hover {
+    background-color: #acd3ff;
+}
+
+    .btn-primary {
+        background-color: #789FCC;
+    }
+
+    .btn-primary:hover {
+        background-color: #acd3ff;
+    }
+
+    /* Footer */
+        footer {
+            background-color: #3b3b3b;
             color: white;
-        }
-        
-        .title {
-            font-size: 2.5rem;
-            font-weight: bold;
+            padding: 10px 0;
             text-align: center;
-            flex: 1; /* Allow the title to take up the center space */
+            margin-top: auto;
         }
 
-        .profile img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%; /* Makes the image circular */
-            cursor: pointer; /* Adds a clickable effect */
+        footer p {
+            margin: 0;
         }
-        .search-bar {
-            display: flex;
-            justify-content: center; /* Center the search bar horizontally */
-            align-items: center; /* Vertically center items within the search bar */
-            margin: 40px auto; /* Add spacing above and below the search bar */
-            padding: 20px;
-            gap: 10px; /* Space between input and button */
-        }
-
-        .search-bar input {
-            width: 60%; /* Make the input field take up most of the space */
-            max-width: 500px; /* Constrain the width */
-            padding: 10px;
-            border: 2px solid #ccc;
-            border-radius: 5px;
-            font-size: 1rem;
-        }
-
-        .search-bar button {
-            padding: 10px 20px;
-            background-color: #000000;
-            color: #cccccc;
-            border: none;
-            border-radius: 5px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .search-bar button:hover {
-            background-color: #4b36cc; /* Darker shade on hover */
-        }
-
-        .content {
-            display: flex;
-            justify-content: center; /* Center the boxes horizontally */
-            align-items: flex-start; /* Align the boxes to the top */
-            padding: 20px;
-            gap: 100px; /* Add space between the boxes */
-            flex-wrap: wrap; /* Allow wrapping on smaller screens */
-            max-width: 1200px; /* Constrain the overall width of the content */
-            margin: 50px auto; /* Center the content on the page */
-        }
-
-        .recently-edited, .top-songs {
-            flex: 1; /* Equal space for both containers */
-            max-width: 45%; /* Prevent them from becoming too wide */
-            min-width: 300px; /* Set a minimum width for small screens */
-            background: rgb(230, 230, 230);
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            height: auto; /* Flexible height for varying content */
-        }
-
-        /* Center content on smaller screens */
+       
+        /* Make content more responsive */
         @media (max-width: 768px) {
-            .content {
-                flex-direction: column; /* Stack boxes vertically */
-                align-items: center; /* Center each box */
+            .header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
             }
 
-            .recently-edited, .top-songs {
-                max-width: 80%; /* Let each box take up most of the screen width */
+            .audio-card {
+                margin: 10px 0;
+                max-width: 100%;
+            }
+
+            .play-controls {
+                margin-bottom: 20px;
+            }
+
+            .btn-primary {
+                width: 100%;
+            }
+
+            .container {
+                padding: 10px;
             }
         }
-
-        h2 {
-            margin-bottom: 10px;
-            font-size: 1.7rem;
-        }
-
-        ul {
-            list-style: none;
-            padding: 10px;
-            border-top: 1px solid grey;
-        }
-        ul:last-child {
-            border-bottom: none;
-        }
-
-        li {
-            padding: auto;
-            margin-bottom: 6px;
-            font: bold;
-            font-size: 1.5rem;
-            text-align: left;
-        }
-        li:hover {
-            background-color: #f0f0f0;
-            cursor: pointer;
-        }
-
-        p {
-            font-size: 1.2rem;
-            color: #333;
-            padding-bottom: 5px;
-        }
-    </style>
+</style>
 <body>
-    <h1>Split Results for {{ request.args.get('song') }}</h1>
-    
-    <h2>Vocals</h2>
-    <audio id="vocals-player" controls>
-        <source src="{{ url_for('static', filename=vocals_file) }}" type="audio/wav">
-        Your browser does not support the audio element.
-    </audio>
-    <button id="vocal-graph-btn" data-file="{{ vocals_file }}">Graph</button>
-    <div id="vocal-waveform-container"></div>
+    <!-- Header -->
+    <nav class="header">
+        <a href="{{ url_for('home') }}">Back to Home</a>
+        <div class="title">Split Results for {{ request.args.get('song') }}</div>
+        <div class="profile">
+            <img src="https://via.placeholder.com/50" alt="Profile Picture">
+        </div>
+        
+    </nav>
 
-    <h2>Drums</h2>
-    <audio id="drums-player" controls>
-        <source src="{{ url_for('static', filename=drums_file) }}" type="audio/wav">
-        Your browser does not support the audio element.
-    </audio>
-    <button id="drum-graph-btn" data-file="{{ drums_file }}">Graph</button>
-    <div id="drum-waveform-container"></div>
+    <div class="container">
+        <!-- <h1>Split Results for {{ request.args.get('song') }}</h1> -->
+        <div class="play-controls">
+            <button onclick="playAll()" class="btn btn-primary">Play All</button>
+            <button onclick="pauseAll()" class="btn btn-primary">Pause All</button>
+        </div>
+            <div class="col-md-12">
+                <div class="audio-card" id="vocals-card">
+                    <h2>Vocals</h2>
+                    <div class="audio-controls">
+                    <audio id="vocals-player" controls>
+                        <source src="{{ url_for('static', filename=vocals_file) }}" type="audio/wav">
+                        Your browser does not support the audio element.
+                    </audio>
+                    <button id="vocal-graph-btn" class="btn btn-primary" data-file="{{ vocals_file }}">Graph</button>
+                    </div>
+                    <div id="vocal-waveform-container" class="waveform-container"></div>
+                </div>
+            </div>
 
-    <h2>Bass</h2>
-    <audio id="bass-player" controls>
-        <source src="{{ url_for('static', filename=bass_file) }}" type="audio/wav">
-        Your browser does not support the audio element.
-    </audio>
-    <button id="bass-graph-btn" data-file="{{ bass_file }}">Graph</button>
-    <div id="bass-waveform-container"></div>
+            <div class="col-md-12">
+                <div class="audio-card" id="drums-card">
+                    <h2>Drums</h2>
+                    <div class="audio-controls">
+                    <audio id="drums-player" controls>
+                        <source src="{{ url_for('static', filename=drums_file) }}" type="audio/wav">
+                        Your browser does not support the audio element.
+                    </audio>
+                    <button id="drum-graph-btn" class="btn btn-primary" data-file="{{ drums_file }}">Graph</button>
+                    </div>
+                    <div id="drum-waveform-container" class="waveform-container"></div>
+                </div>
+            </div>
 
-    <h2>Other</h2>
-    <audio id="other-player" controls>
-        <source src="{{ url_for('static', filename=other_file) }}" type="audio/wav">
-        Your browser does not support the audio element.
-    </audio>
-    <button id="other-graph-btn" data-file="{{ other_file }}">Graph</button>
-    <div id="other-waveform-container"></div>
+            <div class="col-md-12">
+                <div class="audio-card" id="bass-card">
+                    <h2>Bass</h2>
+                    <div class="audio-controls">
+                    <audio id="bass-player" controls>
+                        <source src="{{ url_for('static', filename=bass_file) }}" type="audio/wav">
+                        Your browser does not support the audio element.
+                    </audio>
+                    <button id="bass-graph-btn" class="btn btn-primary" data-file="{{ bass_file }}">Graph</button>
+                    </div>
+                    <div id="bass-waveform-container" class="waveform-container"></div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                        <div class="audio-card" id="piano-card">
+                            <h2>Piano</h2>
+                            <div class="audio-controls">
+                            <audio id="piano-player" controls>
+                                <source src="{{ url_for('static', filename=piano_file) }}" type="audio/wav">
+                                Your browser does not support the audio element.
+                            </audio>
+                            <button id="piano-graph-btn" class="btn btn-primary" data-file="{{ piano_file }}">Graph</button>
+                            </div>
+                            <div id="piano-waveform-container" class="waveform-container"></div>
+                    </div>
+            </div>
 
-    <h2>Piano</h2>
-    <audio id="piano-player" controls>
-        <source src="{{ url_for('static', filename=piano_file) }}" type="audio/wav">
-        Your browser does not support the audio element.
-    </audio>
-    <button id="piano-graph-btn" data-file="{{ piano_file }}">Graph</button>
-    <div id="piano-waveform-container"></div>
+            <div class="col-md-12">
+                <div class="audio-card" id="other-card">
+                    <h2>Extras</h2>
+                    <div class="audio-controls">
+                    <audio id="other-player" controls>
+                        <source src="{{ url_for('static', filename=other_file) }}" type="audio/wav">
+                        Your browser does not support the audio element.
+                    </audio>
+                    <button id="other-graph-btn" class="btn btn-primary" data-file="{{ other_file }}">Graph</button>
+                    </div>
+                    <div id="other-waveform-container" class="waveform-container"></div>
+                </div>
+            </div>
 
-    <br>
-    <div style="margin-top: 20px;">
-        <button onclick="playAll()">Play All</button>
-        <button onclick="pauseAll()">Pause All</button>
+            
     </div>
-
-    <br>
-    <a href="{{ url_for('home') }}">Back to Home</a>
 
     <script>
         // Function to play all audio players simultaneously
@@ -194,7 +258,7 @@
             document.getElementById('vocals-player').play();
             document.getElementById('drums-player').play();
             document.getElementById('bass-player').play();
-            document.getElementById('other-player').play();
+            document.getElementById('other-player').play()
             document.getElementById('piano-player').play();
         }
 
@@ -207,8 +271,10 @@
             document.getElementById('piano-player').pause();
         }
         document.getElementById('vocal-graph-btn').addEventListener('click', function () {
+            but = document.getElementById('vocal-graph-btn');
             const filename = this.getAttribute('data-file'); //Pass accompanient file
-
+            const parentCard = but.closest('.audio-card'); // Find closest parent with the 'audio-card' class
+            const graphContainer = parentCard.querySelector('.waveform-container'); // Select the container inside the card
             fetch('/vocal_graphs', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -218,11 +284,13 @@
             .then(data => {
                 const graphData = data.graph; //Graph data for vocal waveform container graph
                 const graphContainer = document.getElementById('vocal-waveform-container');
+                graphContainer.style.height = "400px";
                 Plotly.react(graphContainer, graphData.data, graphData.layout); //Generate a graph using plotly library
             })
             .catch(error => console.error('Error:', error));
         });
         document.getElementById('drum-graph-btn').addEventListener('click', function () {
+            but = document.getElementById('drum-graph-btn');
             const filename = this.getAttribute('data-file');
 
             fetch('/drum_graphs', {
@@ -234,11 +302,13 @@
             .then(data => {
                 const graphData = data.graph;
                 const graphContainer = document.getElementById('drum-waveform-container');
+                graphContainer.style.height = "400px";
                 Plotly.react(graphContainer, graphData.data, graphData.layout);
             })
             .catch(error => console.error('Error:', error));
         });
         document.getElementById('bass-graph-btn').addEventListener('click', function () {
+            but = document.getElementById('bass-graph-btn');
             const filename = this.getAttribute('data-file');
 
             fetch('/bass_graphs', {
@@ -250,11 +320,13 @@
             .then(data => {
                 const graphData = data.graph;
                 const graphContainer = document.getElementById('bass-waveform-container');
+                graphContainer.style.height = "400px";
                 Plotly.react(graphContainer, graphData.data, graphData.layout);
             })
             .catch(error => console.error('Error:', error));
         });
         document.getElementById('other-graph-btn').addEventListener('click', function () {
+            but = document.getElementById('other-graph-btn');
             const filename = this.getAttribute('data-file');
 
             fetch('/other_graphs', {
@@ -266,11 +338,13 @@
             .then(data => {
                 const graphData = data.graph;
                 const graphContainer = document.getElementById('other-waveform-container');
+                graphContainer.style.height = "400px";
                 Plotly.react(graphContainer, graphData.data, graphData.layout);
             })
             .catch(error => console.error('Error:', error));
         });
         document.getElementById('piano-graph-btn').addEventListener('click', function () {
+            but = document.getElementById('piano-graph-btn');
             const filename = this.getAttribute('data-file');
 
             fetch('/piano_graphs', {
@@ -282,280 +356,17 @@
             .then(data => {
                 const graphData = data.graph;
                 const graphContainer = document.getElementById('piano-waveform-container');
+                graphContainer.style.height = "400px";
                 Plotly.react(graphContainer, graphData.data, graphData.layout);
             })
             .catch(error => console.error('Error:', error));
         });
     </script>
+    <!-- Footer -->
+   <footer>
+    <p>&copy; 2024 SONG-SLICER | Made with &hearts;</p>
+</footer>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-<!--        <!DocType html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page Song-Slicer</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #8d63ff;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-        }
-        
-        .header {
-            display: flex; /* Flex layout for horizontal alignment */
-            align-items: center; /* Center items vertically */
-            justify-content: space-between; /* Space out items (logo/title on left, profile on right) */
-            background-color: rgb(63, 63, 63);
-            padding: 20px;
-            color: white;
-        }
-        
-        .title {
-            font-size: 2.5rem;
-            font-weight: bold;
-            text-align: center;
-            flex: 1; /* Allow the title to take up the center space */
-        }
-
-        .profile img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%; /* Makes the image circular */
-            cursor: pointer; /* Adds a clickable effect */
-        }
-        .search-bar {
-            display: flex;
-            justify-content: center; /* Center the search bar horizontally */
-            align-items: center; /* Vertically center items within the search bar */
-            margin: 40px auto; /* Add spacing above and below the search bar */
-            padding: 20px;
-            gap: 10px; /* Space between input and button */
-        }
-
-        .search-bar input {
-            width: 60%; /* Make the input field take up most of the space */
-            max-width: 500px; /* Constrain the width */
-            padding: 10px;
-            border: 2px solid #ccc;
-            border-radius: 5px;
-            font-size: 1rem;
-        }
-
-        .search-bar button {
-            padding: 10px 20px;
-            background-color: #000000;
-            color: #cccccc;
-            border: none;
-            border-radius: 5px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .search-bar button:hover {
-            background-color: #4b36cc; /* Darker shade on hover */
-        }
-
-        .content {
-            display: flex;
-            justify-content: center; /* Center the boxes horizontally */
-            align-items: flex-start; /* Align the boxes to the top */
-            padding: 20px;
-            gap: 100px; /* Add space between the boxes */
-            flex-wrap: wrap; /* Allow wrapping on smaller screens */
-            max-width: 1200px; /* Constrain the overall width of the content */
-            margin: 50px auto; /* Center the content on the page */
-        }
-
-        .recently-edited, .top-songs {
-            flex: 1; /* Equal space for both containers */
-            max-width: 45%; /* Prevent them from becoming too wide */
-            min-width: 300px; /* Set a minimum width for small screens */
-            background: rgb(230, 230, 230);
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            height: auto; /* Flexible height for varying content */
-        }
-
-        /* Center content on smaller screens */
-        @media (max-width: 768px) {
-            .content {
-                flex-direction: column; /* Stack boxes vertically */
-                align-items: center; /* Center each box */
-            }
-
-            .recently-edited, .top-songs {
-                max-width: 80%; /* Let each box take up most of the screen width */
-            }
-        }
-
-        h2 {
-            margin-bottom: 10px;
-            font-size: 1.7rem;
-        }
-
-        ul {
-            list-style: none;
-            padding: 10px;
-            border-top: 1px solid grey;
-        }
-        ul:last-child {
-            border-bottom: none;
-        }
-
-        li {
-            padding: auto;
-            margin-bottom: 6px;
-            font: bold;
-            font-size: 1.5rem;
-            text-align: left;
-        }
-        li:hover {
-            background-color: #f0f0f0;
-            cursor: pointer;
-        }
-
-        p {
-            font-size: 1.2rem;
-            color: #333;
-            padding-bottom: 5px;
-        }
-    </style>
-</head>
-<body>
-    <nav class="header">
-        <div class="logo">
-            <img src="https://via.placeholder.com/50" alt="Logo">
-        </div> 
-        <div class="title">SONG-SLICER</div>
-        <div class="profile">
-            <img src="https://via.placeholder.com/50" alt="Profile Picture">
-        </div>
-    </nav>
-    <div class="search-bar">
-        <input type="text" placeholder="Search for songs..." />
-        <button>Search</button>
-    </div> -->
-  <!--  <form class="search-bar" method="post" action="/">
-        <label for="user_input"></label>
-        <input type="text" id="user_input" name="user_input">
-        <button type="submit">Submit</button>
-    </form>
-
-
-    <div class="content">
-        <div class="recently-edited">
-            <h2>Recently Edited:</h2>
-            <ul>
-                <li>
-                    <div>Song 1</div>
-                    <p>Song description.</p>
-                </li>
-                <li>
-                    <div>Song 2</div>
-                    <p>Song description.</p>
-                </li>
-                <li>
-                    <div>Song 3</div>
-                    <p>Song description.</p>
-                </li>
-            </ul>
-        </div>
-        <div class="top-songs">
-            <h2>Top Songs:</h2>
-            <ul>
-                {% if tracks %}
-                    {% for track in tracks %}
-                    <li>
-                        {% if track.name %}
-                        <div>{{ track.name }}</div>
-                        {% endif %}
-                        {% if track.preview_url %}
-                         Audio player is displayed -->
-                        <!-- <p>Audio URL: {{ audio_url }}</p> -->
-                      <!--   <audio controls>
-                            <source src="{{ track.preview_url }}" type="audio/mpeg">
-                            Your browser does not support the audio element.
-                        </audio>
-                        {% else %}
-                           Message displayed if file doesn't exist 
-                            <p>No audio file available to play.</p>
-                        {% endif %}
-                        {% if track.album.images and track.album.images|length > 0 %}
-                         Image is displayed 
-                        <img src="{{ track.album.images[0].url }}" alt="Album Cover" style="width: 96px; margin-top: 10px;" />
-                        {% else %}
-                            Message displayed if file doesn't exist -->
-                         <!--    <p>No image available.</p>
-                        {% endif %}
-                    </li>
-                    {% endfor %}
-                {% else %}
-                    <p>No tracks found.</p>
-                {% endif %}-->
-                <!-- <li>
-                    <div>Song 4</div>
-                    <p>Song description.</p>
-                </li>
-                <li>
-                    <div>Song 5</div>
-                    <p>Song description.</p>
-                </li> -->
-           <!--  </ul>
-        </div>
-    </div>
-</body> -->
-
-
-<!-- <script>
-    async function searchSong() {
-        const query = document.getElementById('search-input').value;
-
-        if (!query) {
-            alert('Please enter a search term!');
-            return;
-        }
-
-        try {
-            // Send the query to the backend
-            const response = await fetch('http://localhost:5000/search', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ query }),
-            });
-
-            const result = await response.json();
-
-            // Handle errors
-            if (!response.ok) {
-                alert(result.error || 'An error occurred!');
-                return;
-            }
-
-            // Display search result
-            const resultDiv = document.getElementById('search-result');
-            resultDiv.innerHTML = `
-                <h3>${result.track_name} by ${result.artist}</h3>
-                <audio controls>
-                    <source src="${result.preview_url}" type="audio/mpeg">
-                    Your browser does not support the audio tag.
-                </audio>
-                <div>
-                    <img src="${result.album_cover}" alt="Album Cover" style="width: 200px; margin-top: 10px;" />
-                </div>
-            `;
-        } catch (error) {
-            console.error('Error:', error);
-            alert('An error occurred. Please try again.');
-        }
-    }
-</script> 
-
-</html>
- -->

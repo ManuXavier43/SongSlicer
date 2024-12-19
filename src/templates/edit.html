@@ -3,7 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SONG-SLICER - Edit Page</title>
+    <title>SONG-SLICER</title>
+    <!-- Bootstrap CSS (CDN) -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-QWTK8XhBv6jt6t3B5D5Z8hLXlH1IY2Ow9d+G3Ojz5lUPP2C0GgaJ9ObDbzJ67MXY"
+        crossorigin="anonymous"
+    />
     <style>
         * {
             margin: 0;
@@ -14,7 +21,7 @@
         /* General Styles */
         body {
             font-family: Arial, sans-serif;
-            background-color: #8d63ff;
+            background-color: #171717;
             margin: 0;
             padding: 0;
             display: flex;
@@ -27,10 +34,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: rgb(0, 0, 0);
+            background-color: #3b3b3b;
             padding: 20px;
             color: #fff;
-            border-bottom: 2px solid #ddd;
+            /* border-bottom: 2px solid #ddd; */
             width: 100%;
             position: sticky;
             top: 0;
@@ -58,13 +65,13 @@
             align-items: center;
             gap: 20px;
             padding: 20px;
-            background: rgba(0, 0, 0, 0.1);
+            background: rgb(255, 255, 255);
             border-radius: 10px;
         }
 
         .form-container label {
             font-size: 1.5rem;
-            color: #fff;
+            color: #000000;
         }
 
         .form-container select, .form-container button {
@@ -74,46 +81,27 @@
             border: none;
             cursor: pointer;
         }
-
         .form-container button {
-            background-color: #ffa33a;
+            background-color: #789FCC;
             color: #fff;
             transition: background-color 0.3s ease;
         }
         .form-container button:hover:not(:disabled) {
-            background-color: #e6952a;
+            background-color: #acd3ff;
         }
-       
+
 
         .form-container button:disabled {
-            background-color: #ccc;
+            background-color: #acd3ff;
             cursor: not-allowed;
         }
 
-        
-
-        /* Actions and Song Controls */
-        .actions {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .action-btn {
-            padding: 15px 25px;
-            border: none;
+        .uploaded-songs {
+            background: #fff;
             border-radius: 10px;
-            color: #fff;
-            cursor: pointer;
-            font-size: 1.2rem;
-        }
-
-        .save {
-            background-color: #4caf50;
-        }
-
-        .edit {
-            background-color: #e91e63;
+            padding: 20px;
+            width: 60%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         .uploaded-songs {
             background: #fff;
@@ -166,11 +154,50 @@
         .sliders input[type="range"] {
             width: 100px;
         }
+        /* Footer */
+        footer {
+            background-color: #3b3b3b;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        footer p {
+            margin: 0;
+        }
+         /* Available Songs Section */
+         .available-songs-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .available-songs-container h2 {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+
+        .available-songs-container ul {
+            list-style: none;
+            padding: 10px;
+        }
+
+        .available-songs-container li {
+            font-size: 1.2rem;
+            padding: 5px;
+        }
 
     </style>
 </head>
 <body>
-    <!-- Header Section -->
+  <!-- Header Section -->
     <!-- Header Section -->
 <header class="header">
     <h1 class="title">SONG-SLICER - Edit Page</h1>
@@ -188,6 +215,7 @@
                 {% endfor %}
             </select>
             <button type="submit" id="split-button">Split Song</button>
+
         </form>
     </div>
 
@@ -199,7 +227,14 @@
             <button type="submit">Upload</button>
         </form>
     </div>
-
+<!-- Upload New MP3 -->
+<div class="form-container">
+    <form action="{{ url_for('edit_page') }}" method="POST" enctype="multipart/form-data">
+        <label for="file">Upload New MP3:</label>
+        <input type="file" name="file" id="file" accept=".mp3" required>
+        <button type="submit">Upload</button>
+    </form>
+</div>
     <!-- List of Uploaded Songs -->
     <div class="uploaded-songs">
         <h2>Available Songs</h2>
@@ -218,29 +253,17 @@
         splitButton.textContent = "Splitting...dont refresh";
         }
 </script>
+    
+    <footer>
+        <p>&copy; 2024 SONG-SLICER | Made with &hearts;</p>
+    </footer>
+    <!-- Bootstrap Bundle with Popper.js -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pp1ZQ2+nJzmQ81V5j+Xo/mRxjI4FhS3+GP2L/BjeOjF6zO/i7qxexXWJ"
+        crossorigin="anonymous"
+    ></script>
 
-    <!-- Footer Controls -->
-     <!--  <footer class="controls"></footer>
-        <div class="sliders">
-            <div>
-                <label>Volume</label>
-                <input type="range" min="0" max="100">
-            </div>
-            <div>
-                <label>Sample rate</label>
-                <input type="range" min="0" max="100">
-                <span>44000Hz</span>
-            </div>
-            <div>
-                <label>Frequency</label>
-                <input type="range" min="0" max="100">
-            </div>
-            <div>
-                <label>Time</label>
-                <input type="range" min="0" max="100">
-                <span>0:00/0:20s</span>
-            </div>
-        </div>
-    </footer> -->
 </body>
 </html>
+
