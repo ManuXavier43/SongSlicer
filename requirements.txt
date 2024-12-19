@@ -1,5 +1,4 @@
 spleeter
-spotipy
 deezer-python
 python-dotenv
 flask==2.0.3
