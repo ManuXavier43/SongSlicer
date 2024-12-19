@@ -103,6 +103,27 @@
             width: 60%;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+        .uploaded-songs {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            width: 60%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .uploaded-songs h2 {
+            margin-bottom: 10px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
 
         /* Footer Controls */
         .controls {
@@ -194,6 +215,16 @@
                 {% endfor %}
             </select>
             <button type="submit" id="split-button">Split Song</button>
+
+        </form>
+    </div>
+
+    <!-- Upload New MP3 -->
+    <div class="form-container">
+        <form action="{{ url_for('edit_page') }}" method="POST" enctype="multipart/form-data">
+            <label for="file">Upload New MP3:</label>
+            <input type="file" name="file" id="file" accept=".mp3" required>
+            <button type="submit">Upload</button>
         </form>
     </div>
 <!-- Upload New MP3 -->
@@ -232,6 +263,7 @@
         integrity="sha384-pp1ZQ2+nJzmQ81V5j+Xo/mRxjI4FhS3+GP2L/BjeOjF6zO/i7qxexXWJ"
         crossorigin="anonymous"
     ></script>
+
 </body>
 </html>
 
