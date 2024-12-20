@@ -34,4 +34,4 @@ EXPOSE 8080
 # CMD ["python", "src/main.py"]
 
 #Testing
-CMD ["pytest", "src/tests/test_app.py", "--tb=short"]
+CMD ["pytest", "src/tests/test_routes.py", "--tb=short"]
