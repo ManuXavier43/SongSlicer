@@ -41,3 +41,7 @@ Spleeter is used to isolate the source track into vocals, instrumentals, etc.
 
 **Flask**
 Song-Slicer is built using Flask for its GUI. It handles POST and GET requests. Tracks are served using different routes and there's mainly a home, edit and results page.
+
+# TESTING
+```docker build -t song-slicer-test .  ```
+```docker run --rm song-slicer-test```

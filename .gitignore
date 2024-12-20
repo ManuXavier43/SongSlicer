@@ -6,3 +6,7 @@ src/deezer/music_in
 src/test_mp3s/thx.wav
 src/deezer/pretrained_models
 preview.mp3
+src/tests/__pycache__
+.benchmarks
+.pytest_cache
+src/__pycache__

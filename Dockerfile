@@ -24,10 +24,14 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Set PYTHONPATH to include /app
-ENV PYTHONPATH=/app
+# ENV PYTHONPATH=/app
+ENV PYTHONPATH=/app/src:/app
 
 # Expose Flask's default port
 EXPOSE 8080
 
 # Command to run the main script
-CMD ["python", "src/main.py"]
+# CMD ["python", "src/main.py"]
+
+#Testing
+CMD ["pytest", "src/tests/test_app.py", "--tb=short"]
