@@ -24,7 +24,7 @@ def home():
     audio_url = None
     song_name = None
     tracks = None
-    
+
     try:
         # Get the list of songs in music_in directory
         songs = [f for f in os.listdir(MUSIC_IN_DIR) if os.path.isfile(os.path.join(MUSIC_IN_DIR, f))]
@@ -71,6 +71,7 @@ def home():
         
     # Render the template with updated song list
     return render_template("home.html", tracks=tracks, songs=songs)
+
 @app.route("/edit", methods=["GET", "POST"])
 def edit_page():
     if request.method == "POST":

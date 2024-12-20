@@ -38,7 +38,21 @@
         text-align: center;
         flex-grow: 1;
     }
+    .btn-custom-split {
+            padding: 9px 19px;
+            background-color: #789FCC;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            max-width: 100%; /* Ensures button stays within the container */
+            white-space: nowrap; /* Prevents text wrapping */
+            align-self: flex-end;
+        }
 
+        .btn-custom-split:hover {
+            background-color: #acd3ff;
+        }
     .profile img {
         width: 50px;
         height: 50px;
@@ -103,18 +117,18 @@
         gap: 10px; /* Add space between the buttons */
     }
     .play-controls button {
-    padding: 10px 20px;
-    background-color: #789FCC;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
+        padding: 10px 20px;
+        background-color: #789FCC;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
 
-.play-controls button:hover {
-    background-color: #acd3ff;
-}
+    .play-controls button:hover {
+        background-color: #acd3ff;
+    }
 
     .btn-primary {
         background-color: #789FCC;
@@ -166,7 +180,7 @@
 <body>
     <!-- Header -->
     <nav class="header">
-        <a href="{{ url_for('home') }}">Back to Home</a>
+        <a href="{{ url_for('home') }}" class="btn btn-custom-split">Back to Home</a>
         <div class="title">Split Results for {{ request.args.get('song') }}</div>
         <div class="profile">
             <img src="https://via.placeholder.com/50" alt="Profile Picture">
