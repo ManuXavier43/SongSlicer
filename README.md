@@ -1,6 +1,6 @@
-# Song Slicer
+# Song-Slicer
 
-Song slicer is a python application proposal that allows you to slice songs to separate vocals and instruments by category. We're developing this so people can easily create tracks with their favourite instruments, isolate vocals or even make a karaoke version for a night out!
+Song-Slicer is a python application proposal that allows you to slice songs to separate vocals and instruments by category. We're developing this so people can easily create tracks with their favourite instruments, isolate vocals or even make a karaoke version for a night out!
 
 # Sprint timeline
 
@@ -12,7 +12,7 @@ Song slicer is a python application proposal that allows you to slice songs to s
 
 # Intro
 
-This project is a Flask app that uses the Deezer Spleeter to split songs into vocals and instrumentals. For demo purposes, previews can be fetched using the Spotify api.
+This project is a Flask app that uses the Deezer Spleeter to split songs into vocals and instrumentals. For demo purposes, previews can be fetched using the Deezer api, however local mp3 files can also be uploaded for splitting. Plotly is used to display waveforms of each split, showing the split's amplitude over time.
 
 ## Run Flask app using Docker
 
@@ -27,7 +27,11 @@ This project is a Flask app that uses the Deezer Spleeter to split songs into vo
 ```docker run -it song-slicer /bin/bash```
 ```python src/[PATH_TO_PYTHON_FILE]```
 
-# Docker Dependencies
+# TESTING Song-Slicer
+```docker build -t song-slicer-test .  ```
+```docker run --rm song-slicer-test```
+
+# Primary Docker Dependencies
 Previously, this project made use of a virtual conda "spleeter" env with py -v 3.8 as spleeter has deprecated dependancies.
 "conda activate spleeter-env"
 
@@ -40,4 +44,24 @@ Previously samples were sourced from Spotify. Spotify made API changes so we swi
 Spleeter is used to isolate the source track into vocals, instrumentals, etc.
 
 **Flask**
-Song-Slicer is built using Flask for its GUI. It handles POST and GET requests. Tracks are served using different routes and there's mainly a home, edit and results page.
+Song-Slicer is built using Flask for its GUI. It handles POST and GET requests. Tracks are served using different routes and there's a home, edit and results page.
+
+**Plotly**
+Plotly is used to display waveforms of each respective split.
+
+**PyTest**
+PyTest is used for 14 unit tests that test Song-Slicer routes and splitting functionalities.
+
+# Secondary Docker Dependencies
+
+**Werkzeug**
+Security dependency for Flask
+
+**Numpy**
+To generate waveform signal
+
+**Scipy**
+TO change amplitude level of detail using the resample method
+
+**Tensorflow/Tensorflow-CPU**
+Dependency of Spleeter for creating song splits using GPU/CPU respectively
