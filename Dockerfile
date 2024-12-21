@@ -1,36 +1,32 @@
-# Use Python 3.9 as the base image
+#Use Python 3.9 for Spleeter to work
 FROM python:3.9-slim
 
-# Set the working directory inside the container
+#App root folder for docker container
 WORKDIR /app
-
+#Where songs are saved/local songs found
 RUN mkdir -p /app/src/splits/music_in
 
-# Install system dependencies for tkinter
+#Dependencies
 RUN apt-get update && apt-get install -y \
-    tk \
     ffmpeg \
     libsndfile1 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements file to the container
+#Install other requirements
 COPY requirements.txt .
-
-# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application files
+#Copy app files
 COPY . .
 
-# Set PYTHONPATH to include /app
-# ENV PYTHONPATH=/app
+#Set PYTHONPATH to include /app and src folder
+#ENV PYTHONPATH=/app
 ENV PYTHONPATH=/app/src:/app
 
-# Expose Flask's default port
 EXPOSE 8080
 
-# Command to run the main script
+# Run main
 CMD ["python", "src/main.py"]
 
 #Testing
