@@ -72,7 +72,7 @@ class TestEditPage:
 
         # Assert response with an error message
         assert response.status_code == 200
-        # assert b"Invalid file format. Only MP3 files are allowed." in response.data
+        assert b"Invalid file format. Only MP3 files are allowed." in response.data
 
     @patch("os.makedirs")
     def test_no_file_selected(self, mock_makedirs, client):
