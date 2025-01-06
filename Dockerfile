@@ -27,7 +27,7 @@ ENV PYTHONPATH=/app/src:/app
 EXPOSE 8080
 
 # Run main
-# CMD ["python", "src/main.py"]
+CMD ["python", "src/main.py"]
 
 #Testing
-CMD ["pytest", "src/tests/test_routes.py", "--tb=short"]
+# CMD ["pytest", "src/tests/test_routes.py", "--tb=short"]

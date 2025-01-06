@@ -9,42 +9,41 @@ def generate_waveform_with_slider(sanitized_song_name):
     vocals_file = f"/app/src/static/{sanitized_song_name}"
     print(f"Processing file: {vocals_file}")
 
-    # Open the audio file
+    #Open the audio file
     try:
         song = wv.open(vocals_file, 'rb')
-        freq = song.getframerate()  # Original sampling frequency
-        samples = song.getnframes()  # Number of original samples
-        t = samples / freq  # Duration in seconds
-        signal = np.frombuffer(song.readframes(samples), dtype=np.int16)
-        song.close()
+        freq = song.getframerate()  #Original sampling frequency
+        samples = song.getnframes()  #Number of samples
+        t = samples / freq  #time
+        signal = np.frombuffer(song.readframes(samples), dtype=np.int16) #signal
+        song.close() 
         print(f"Audio file loaded successfully: {samples} samples, {freq} Hz, {t:.2f} seconds.")
     except Exception as e:
         print(f"Error loading audio file: {e}")
         return None
 
-    # Downsample for faster rendering if necessary
     print("Starting downsampling...")
-    max_points = 2000
+    max_points = 2000 #lower resolution to compute faster
     step = max(1, len(signal) // max_points)
-    signal = signal[::step]  # Reduce the number of samples
-    samples = len(signal)
+    signal = signal[::step]  #Reduce the number of samples
+    samples = len(signal) #new number of samples w audio steps
     print(f"Downsampling complete: {samples} samples, original duration: {t:.2f} seconds.")
 
-    # Create traces and slider steps
+    #slider steps
     print("Generating traces and slider steps...")
     traces = []
     sliders_steps = []
-    resolution_levels = [0.1, 0.25, 0.5, 1.0, 2.0]
+    resolution_levels = [0.1, 0.25, 0.5, 1.0, 2.0]  #5 slider levels
     default_res_index = 3
     for i,res in enumerate(resolution_levels):  # Sample rates from 1 to 5
         print(f"Generating trace for sample rate {res}...")
         resampled_signal = resample(signal, int(samples * res))
         resampled_samples = len(resampled_signal)
         
-        # Use the original duration `t` for the time axis
+        #x axis
         time_axis = np.linspace(0, t, num=resampled_samples)
 
-        # Create a trace for each sample rate
+        #Create traces to plot graph
         traces.append(
             go.Scatter(
                 x=time_axis,
@@ -54,7 +53,7 @@ def generate_waveform_with_slider(sanitized_song_name):
             )
         )
 
-        # Define the slider step
+        #slider step
         sliders_steps.append({
             "args": [{"visible": [j == i for j in range(len(resolution_levels))]}],
             "label": f"{res:.2f}",
@@ -65,7 +64,7 @@ def generate_waveform_with_slider(sanitized_song_name):
 
     print("Traces and slider steps generated.")
 
-    # Create layout with a slider
+    #make a layout
     print("Creating layout with slider...")
     layout = go.Layout(
         title="Waveform with scale slider",
@@ -78,7 +77,7 @@ def generate_waveform_with_slider(sanitized_song_name):
         }]
     )
 
-    # Generate figure
+    #make figure and json
     print("Generating final figure...")
     fig = go.Figure(data=traces, layout=layout)
     fig_json = json.loads(fig.to_json())
