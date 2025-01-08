@@ -2,13 +2,23 @@
 
 Song-Slicer is a python application proposal that allows you to slice songs to separate vocals and instruments by category. We're developing this so people can easily create tracks with their favourite instruments, isolate vocals or even make a karaoke version for a night out!
 
-# Initial Sprint Timeline
+# Initial Sprint Timeline for first few weeks...
 
 + Week 1: Set up Spotipy to fetch song samples and group song data
 + Week 2: Edit Screen UI, split a song into one category, generate a spectrogram on a sample song
 + Week 3: Add sliders for frequency etc, split a song into different categories, intergrate spectrogram for different instruments and with slider
 + Week 4: Design home page, add spotify songs to home page, connect to spotify profile in app
 + Week 5: Saving track functionality in app, search songs by name, comparisions of graphs of different splits (possibly generate insights).
+
+# Actual Sprint Timeline
++ Week 1: Connected to Spotipy and could get a live song feed from the user.
++ Week 2: Fetched a set of tracks from Spotipy. Set up a virtual anaconda environment for dependencies.
++ Week 3: Deezer Spleeter program could split a local file into 2 stems. User input added for Spotipy searching of tracks.
++ Week 4: Changed to docker environment from anaconda. Created a dockerfile for Song-Slicer. Set up Flask. Created Home , edit and results page templates. Connected the Spleeter and Spotipy classes. The user could now search a Spotipy sample on the home page, navigate to edit page to choose which song to split, split it with Deezer and have the result shown in the results page with audio player.
++ Week 5: Spotify changed their TOS for their API so we switched to Deezer for fetching song samples. Changed the logic to fetch Deezer tracks instead.
++ Week 6: Changed Spleeter from 2 stems to 5 stems for 5 splits. Researched APIs for song cleanup. UI overall, especially on results page.
++ Week 7: Added Plotly graph buttons for each split on the results page for amplitude over time. A resultion slider was added to see the waves in more or less detail.
++ Week 8: Researched and experimented with hosting Song-Slicer on Azure rather than localhost. Created a virtual machine in Azure to experiment with connecting to an IP address hosting the app, but decided against it due to time constraints and no content moderation.
 
 # Intro
 
