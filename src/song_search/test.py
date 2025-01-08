@@ -1,6 +1,13 @@
 import deezer 
 # from dotenv import load_dotenv #previously needed for spotipy
 #Setup console logs
+'''Reference: Deezer's API with Python
+
+This was a great guide to understanding how to connect Deezer API worked with Python to play music.
+We did not end up needed to using the OAuth method to connect to Deezer but we did use it when using the older Spotipy client
+and have since switched to directly connecting to the Deezer API URL. 
+https://alexisgomes19.medium.com/deezers-api-with-python-c3bf8c61610f
+'''
 import logging
 logging.basicConfig(level=logging.DEBUG)
 

@@ -8,6 +8,12 @@ import re
 import requests
 from flask import jsonify
 
+'''
+Reference: QuickStart to using Flask
+
+This was used to get an understanding of how to use Flask and create routes to set up pages for a Flask application.
+https://flask.palletsprojects.com/en/stable/quickstart/
+'''
 #Create a Flask app
 app = Flask(__name__, static_folder="static", static_url_path="/static")
 
