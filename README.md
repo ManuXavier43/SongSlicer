@@ -24,12 +24,18 @@ Song-Slicer is a python application proposal that allows you to slice songs to s
 
 This project is a Flask app that uses the Deezer Spleeter to split songs into vocals and instrumentals. For demo purposes, previews can be fetched using the Deezer api, however local mp3 files can also be uploaded for splitting. Plotly is used to display waveforms of each split, showing the split's amplitude over time.
 
+## Install Docker Desktop
+
+https://www.docker.com/products/docker-desktop/
+
 ## Run Flask app using Docker
 
+Navigate to the inner song-slicer-main directory ```song-slicer-main\song-slicer-main```. This parent directory should be a level above the Dockerfile, the src folder, the README etc.
 ```docker build -t song-slicer .  ```
 ```docker run -p 8080:5000 song-slicer``` This maps the container port 5000 to local port 8080
 
-**Flask container URL:** http://127.0.0.1:8080/
+**Flask container URL:** Access the website on localhost: http://127.0.0.1:8080/
+In case the Deezer API takes some time to respond on the first startup, stop the container and run again.
 
 # (DEBUGGING) Run python app using Docker
 
